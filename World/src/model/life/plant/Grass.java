@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.util.Random;
 
+import model.Statistic;
 import model.life.Plant;
 
 public class Grass extends Plant {
@@ -17,6 +18,10 @@ public class Grass extends Plant {
 				new Point(9, 9),
 				new Point (_positionLine, _positionCol),
 				0.3);
+
+		if (!( _positionCol == -1 && _positionLine == -1)) {
+			Statistic.increaseAmountGrass();
+		}
 	}
 	public Grass getPlant(final int _positionLine, final int _positionCol){
 		return new Grass(_positionLine, _positionCol);

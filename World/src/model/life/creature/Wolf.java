@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.util.Random;
 
+import model.Statistic;
 import model.life.Creature;
 import model.map.Scope;
 
@@ -38,7 +39,10 @@ public class Wolf extends Creature{
 				new Point(9, 9),
 				
 				1);
-		// TODO Auto-generated constructor stub
+
+		if (!( _positionCol == -1 && _positionLine == -1)) {
+			Statistic.increaseAmountWolfs();
+		}
 	}
 
 	

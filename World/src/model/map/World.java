@@ -5,6 +5,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
 
+import model.Statistic;
 import model.life.creature.Monkey;
 import model.life.creature.Sheep;
 import model.life.creature.Wolf;
@@ -44,11 +45,16 @@ public class World extends Observable {
 	
 	
 	public void planckTime() {
+		
+		
+		Statistic.resetPercentages();
+		
 
 		for (int line = 0; line < wi_world.length; line++) {
 			for (int column = 0; column < wi_world[line].length; column++) {
 				wi_world[line][column].getLifeEmission().planckTime();
 				if (wi_world[line][column].getLife() != null) {
+					
 					wi_world[line][column].startLifePlanckTime();
 				}
 			}
@@ -65,6 +71,59 @@ public class World extends Observable {
 				wi_world[line][column].updateEmission();
 			}
 		}
+		
+		String s = "";
+		
+		if (Statistic.getAmountwolfs() == 0) {
+
+			s += 
+					"Wolf: \t " + Statistic.getAmountwolfs();
+
+		} else {
+
+			s += 
+					"Wolf: \t " + Statistic.getAmountwolfs()
+					+ "\n\tage:\t" + (Statistic.getAgewolfs() / Statistic.getAmountwolfs())
+					+ "\n\thunger:\t" + (Statistic.getHungerwolfs() / Statistic.getAmountwolfs())
+					+ "\n\tpregnancy:\t" + (Statistic.getPregnantwolfs() / Statistic.getAmountwolfs());
+
+		}
+		
+		if (Statistic.getAmountsheeps() == 0) {
+			s +=
+					"\n\nSheep: \t " + Statistic.getAmountsheeps();
+			
+		} else {
+			s +=
+					"\n\nSheep: \t " + Statistic.getAmountsheeps()
+					+ "\n\tage:\t" + (Statistic.getAgesheeps() / Statistic.getAmountsheeps())
+					+ "\n\thunger:\t" + (Statistic.getHungersheeps() / Statistic.getAmountsheeps())
+					+ "\n\tpregnancy:\t" + (Statistic.getPregnantsheeps() / Statistic.getAmountsheeps());
+			
+		}
+				
+		
+		if (Statistic.getAmountmonkeys() == 0) {
+			s +=
+					"\n\nSheep: \t " + Statistic.getAmountmonkeys();
+				
+		} else {
+			s +=
+					"\n\nSheep: \t " + Statistic.getAmountmonkeys()
+					+ "\n\tage:\t" + (Statistic.getAgemonkeys() / Statistic.getAmountmonkeys())
+					+ "\n\thunger:\t" + (Statistic.getHungermonkeys() / Statistic.getAmountmonkeys())
+					+ "\n\tpregnancy:\t" + (Statistic.getPregnantmonkeys() / Statistic.getAmountmonkeys());
+			
+		}
+		
+		s +=
+				"\n\n"
+				+ "\nGrass: \t " + Statistic.getAmountGrass()
+				+ "\nTrees: \t " + Statistic.getAmountTrees()
+				+ "\nBerries: \t " + Statistic.getAmountBerries();
+		
+		setChanged();
+		notifyObservers(s);
 	}
 	
 	

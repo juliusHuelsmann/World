@@ -23,7 +23,7 @@ public class WorldController implements Runnable, ActionListener {
 	
 	
 	public static void main(String[]args){
-		new WorldController(105, 100);
+		new WorldController(55, 50);
 	}
 	
 	public static final int INDEX_AD_LIBITIUM = -1, INDEX_UNDEFINED = -2;

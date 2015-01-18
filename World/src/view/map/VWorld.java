@@ -7,6 +7,7 @@ import java.util.Observer;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 import model.util.Status;
 
@@ -15,27 +16,38 @@ public class VWorld extends JPanel implements Observer  {
 
 	private VWorldItem[][] vwi;
 
+	private JTextArea jta_text;
 	
 	public VWorld() {
 		
 		super.setLayout(null);
 		
+		jta_text = new JTextArea();
+		jta_text.setOpaque(false);
+		jta_text.setEditable(false);
+		jta_text.setFocusable(false);
+		jta_text.setBorder(null);
+		super.add(jta_text);
 	}
 	
 	
 	public void setSize(int _width, int _height) {
 
 		super.setSize(_width, _height);
+		
+		int iconX = getWidth() * 3 / 4;
+		jta_text.setBounds(iconX, 20, getWidth() - iconX, getHeight() - 30);
+		
 		for (int line = 0; vwi != null && line < vwi.length; line++) {
 			for (int column = 0; column < vwi[line].length; column++) {
 				
 				if (vwi[line][column] != null) {
 
 					vwi[line][column].setLocation(
-							getWidth() * line / (vwi.length + 1), 
+							iconX * line / (vwi.length + 1), 
 							getHeight() * column / (vwi[line].length + 1));
 					vwi[line][column].setSize(
-							getWidth() / (vwi.length + 1), 
+							iconX / (vwi.length + 1), 
 							getHeight() / (vwi[line].length + 1));
 				}
 			}
@@ -65,11 +77,13 @@ public class VWorld extends JPanel implements Observer  {
 						vwi[line][column].
 						setBorder(BorderFactory.createLineBorder(Color.gray));
 					}
+
+					int iconX = getWidth() * 4 / 5;
 					vwi[line][column].setLocation(
-							getWidth() * line / (vwi.length + 1), 
+							iconX * line / (vwi.length + 1), 
 							getHeight() * column / (vwi[line].length + 1));
 					vwi[line][column].setSize(
-							getWidth() / (vwi.length + 1), 
+							iconX / (vwi.length + 1), 
 							getHeight() / (vwi[line].length + 1));
 					super.add(vwi[line][column]);
 				}
@@ -95,7 +109,9 @@ public class VWorld extends JPanel implements Observer  {
 				Status.getLogger().warning("fatal error");
 			}
 
-		} else {
+		} else if (arg instanceof String) {
+			jta_text.setText("" + arg);
+		}else {
 			
 			Status.getLogger().severe("observer error" + arg );
 		}

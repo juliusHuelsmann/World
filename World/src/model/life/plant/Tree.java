@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.util.Random;
 
+import model.Statistic;
 import model.life.Plant;
 
 public class Tree extends Plant {
@@ -17,6 +18,10 @@ public class Tree extends Plant {
 				new Point(6, 6),
 				new Point (_positionLine, _positionCol),
 				0.1);
+
+		if (!( _positionCol == -1 && _positionLine == -1)) {
+			Statistic.increaseAmountTrees();
+		}
 	}
 	public Tree getPlant(final int _positionLine, final int _positionCol){
 		return new Tree(_positionLine, _positionCol);

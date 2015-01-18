@@ -2,6 +2,8 @@ package model.life;
 
 import java.awt.Point;
 import java.util.Random;
+
+import model.Statistic;
 import model.life.creature.Sheep;
 import model.life.creature.Wolf;
 import model.map.Scope;
@@ -127,6 +129,7 @@ public abstract class Creature extends Life {
 			
 			wi_scope[pnt_positionInScope.x][pnt_positionInScope.y]
 					.remvoeLife(this);
+			Statistic.removeLife(this);
 		} else {
 //			System.out.println("error");
 			Status.getLogger().severe("not initialized yet");

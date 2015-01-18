@@ -3,7 +3,7 @@ package model.life;
 import java.awt.Color;
 import java.awt.Point;
 
-import model.life.plant.Tree;
+import model.Statistic;
 import model.map.Scope;
 import model.map.WorldItem;
 
@@ -32,6 +32,7 @@ public abstract class Life {
 	public void startPlanckTime(){
 		
 		if (allowedToMove()) {
+			Statistic.add(this);
 			planckTime();
 			moved = true;
 			emitSmell();

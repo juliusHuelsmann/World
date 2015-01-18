@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.util.Random;
 
+import model.Statistic;
 import model.life.Creature;
 import model.map.Scope;
 
@@ -40,7 +41,10 @@ public class Monkey extends Creature{
 				
 				0.2
 				);
-		// TODO Auto-generated constructor stub
+
+		if (!( _positionCol == -1 && _positionLine == -1)) {
+			Statistic.increaseAmountMonkeys();
+		}
 	}
 
 	@Override

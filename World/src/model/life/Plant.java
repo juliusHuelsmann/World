@@ -3,6 +3,7 @@ package model.life;
 import java.awt.Point;
 import java.util.Random;
 
+import model.Statistic;
 import model.map.Scope;
 import model.map.WorldItem;
 import model.util.Status;
@@ -31,6 +32,8 @@ public abstract class Plant extends Life {
 
 			wi_scope[wi_scope.length / 2][wi_scope[0].length / 2]
 					.remvoeLife(this);
+
+			Statistic.removeLife(this);
 		} else {
 //			System.out.println("error");
 			Status.getLogger().severe("not initialized yet");

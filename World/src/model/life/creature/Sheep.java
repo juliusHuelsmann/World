@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.util.Random;
 
+import model.Statistic;
 import model.life.Creature;
 import model.map.Scope;
 
@@ -38,6 +39,10 @@ public class Sheep extends Creature{
 				new Point(5, 5),
 				
 				0.5);
+
+		if (!( _positionCol == -1 && _positionLine == -1)) {
+			Statistic.increaseAmountSheeps();
+		}
 	}
 	@Override
 	public void planckTime() {
