@@ -271,6 +271,7 @@ public abstract class Creature extends Life {
 	
 						cTimeWithoutFood = 0;
 	
+						
 						wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
 								.removeCreature();
 						move(_dX, _dY);

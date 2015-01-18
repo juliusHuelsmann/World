@@ -265,6 +265,7 @@ public class WorldItem extends Observable {
 		while(!life.isEmpty() && !life.isBehind()){
 			
 			if (life.getElement().getContent() instanceof Creature){
+				life.getElement().getContent().die();
 				life.remove();
 			}
 			life.next();
@@ -282,6 +283,8 @@ public class WorldItem extends Observable {
 		while(!life.isEmpty() && !life.isBehind()){
 			
 			if (life.getElement().getContent() instanceof Grass){
+
+				life.getElement().getContent().die();
 				life.remove();
 			}
 			life.next();
