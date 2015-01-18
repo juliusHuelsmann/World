@@ -6,6 +6,7 @@ import java.util.Observer;
 import java.util.Random;
 
 import model.Statistic;
+import model.life.creature.Einzeller;
 import model.life.creature.Monkey;
 import model.life.creature.Sheep;
 import model.life.creature.Wolf;
@@ -166,14 +167,18 @@ public class World extends Observable {
 
 	public void initialize() {
 
-		final int amountWolfs = 5, amountSheep = 5, amountMonkey = 5,
-				amountBerries = 5, amountTrees = 5, amountGrass = 50;
-//		final int amountWolfs = 0, amountSheep = 60, amountMonkey = 0,
-//		amountBerries = 0, amountTrees = 1, amountGrass = 50;
-//		final int amountWolfs = 0, amountSheep = 10, amountMonkey = 0,
-//				amountBerries = 0, amountTrees = 1, amountGrass = 50;
-//		final int amountWolfs = 1, amountSheep = 0, amountMonkey = 0,
-//				amountBerries = 0, amountTrees = 0, amountGrass = 0;
+		final int percentageWolfs = 5, percentageSheep = 5, percentageMonkey = 5,
+				percentageBerries = 5, percentageTrees = 5, percentageGrass = 50,
+				percentageEinzeller = 5;
+	
+		final int 
+		amountWolfs = percentageWolfs * wi_world.length * wi_world[0].length / 100,
+		amountSheep	= percentageSheep * wi_world.length * wi_world[0].length / 100,
+		amountMonkey = 	percentageMonkey * wi_world.length * wi_world[0].length / 100,
+		amountGrass = percentageGrass * wi_world.length * wi_world[0].length / 100,
+		amountTrees = percentageTrees * wi_world.length * wi_world[0].length / 100,
+		amountBerries = percentageBerries * wi_world.length * wi_world[0].length / 100,
+		amountEinzeller = percentageEinzeller * wi_world.length * wi_world[0].length / 100;
 
 
 		Random rand = new Random();
@@ -184,6 +189,19 @@ public class World extends Observable {
 			int column = new Random().nextInt(wi_world[0].length);
 			
 			if (wi_world[line][column].addLife(new Wolf(line, column))){
+				wi_world[line][column].emitLifeSmell();
+			} else {
+				currentEntity --;
+			}
+			
+		}
+		for (int currentEntity = 0; 
+				currentEntity < amountEinzeller; 
+				currentEntity++) {
+			int line = rand.nextInt(wi_world.length);
+			int column = new Random().nextInt(wi_world[0].length);
+			
+			if (wi_world[line][column].addLife(new Einzeller(line, column))){
 				wi_world[line][column].emitLifeSmell();
 			} else {
 				currentEntity --;
@@ -270,6 +288,129 @@ public class World extends Observable {
 		
 		Status.getLogger().info("initialization process completed.");
 	}
+	
+	
+	
+	public void initializeSheep() {
+
+		final int amountSheep = 5;
+		
+		for (int currentEntity = 0; 
+				currentEntity < amountSheep; 
+				currentEntity++) {
+
+			int line = new Random().nextInt(wi_world.length);
+			int column = new Random().nextInt(wi_world[0].length);
+
+			if (wi_world[line][column].addLife(new Sheep(line, column))){
+
+				
+				wi_world[line][column].emitLifeSmell();
+			} else {
+				currentEntity --;
+			}
+			
+		}
+		
+		if (wi_world != null) {
+
+			for (int line = 0; line < wi_world.length; line++) {
+				for (int column = 0; column < wi_world[line].length; column++) {
+					wi_world[line][column].updateEmission();
+				}
+			}			
+		} else {
+			Status.getLogger().severe("failed initializing");
+		}
+		
+	}public void initializeWolf() {
+
+		final int amountWolfs = 5;
+
+
+		Random rand = new Random();
+		for (int currentEntity = 0; 
+				currentEntity < amountWolfs; 
+				currentEntity++) {
+			int line = rand.nextInt(wi_world.length);
+			int column = new Random().nextInt(wi_world[0].length);
+			
+			if (wi_world[line][column].addLife(new Wolf(line, column))){
+				wi_world[line][column].emitLifeSmell();
+			} else {
+				currentEntity --;
+			}
+			
+		}
+		
+		if (wi_world != null) {
+
+			for (int line = 0; line < wi_world.length; line++) {
+				for (int column = 0; column < wi_world[line].length; column++) {
+					wi_world[line][column].updateEmission();
+				}
+			}			
+		} else {
+			Status.getLogger().severe("failed initializing");
+		}
+	}
+	
+	public void initializeGrass() {
+
+		final int amountGrass = 5;
+		for (int currentEntity = 0; 
+				currentEntity < amountGrass; 
+				currentEntity++) {
+			int line = new Random().nextInt(wi_world.length);
+			int column = new Random().nextInt(wi_world[0].length);
+
+			if (wi_world[line][column].addLife(new Grass(line, column))){
+				wi_world[line][column].emitLifeSmell();
+			}
+		}
+		
+		if (wi_world != null) {
+
+			for (int line = 0; line < wi_world.length; line++) {
+				for (int column = 0; column < wi_world[line].length; column++) {
+					wi_world[line][column].updateEmission();
+				}
+			}			
+		} else {
+			Status.getLogger().severe("failed initializing");
+		}
+		
+	}
+	
+	public void initializeMonkey() {
+
+		int amountMonkey = 5;
+
+		for (int currentEntity = 0; 
+				currentEntity < amountMonkey; 
+				currentEntity++) {
+
+			int line = new Random().nextInt(wi_world.length);
+			int column = new Random().nextInt(wi_world[0].length);
+			if (wi_world[line][column].addLife(new Monkey(line, column))){
+			wi_world[line][column].emitLifeSmell();
+			} else {
+				currentEntity --;
+			}
+		}
+			
+
+			if (wi_world != null) {
+
+				for (int line = 0; line < wi_world.length; line++) {
+					for (int column = 0; column < wi_world[line].length; column++) {
+						wi_world[line][column].updateEmission();
+					}
+				}			
+			} else {
+				Status.getLogger().severe("failed initializing");
+			}
+		}
 
 
 	/**

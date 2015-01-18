@@ -9,8 +9,8 @@ import model.life.Plant;
 
 public class Tree extends Plant {
 
-	final int reproducionTime = new Random(60).nextInt(105);
-	final int lifeTime = new Random(90).nextInt(105);
+	final int reproducionTime = 60 + new Random().nextInt(45);
+	final int lifeTime = 90 + new Random().nextInt(25);
 
 	public Tree(final int _positionLine, final int _positionCol) {
 		super(

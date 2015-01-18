@@ -23,7 +23,7 @@ public class WorldController implements Runnable, ActionListener {
 	
 	
 	public static void main(String[]args){
-		new WorldController(55, 50);
+		new WorldController(100, 100);
 	}
 	
 	public static final int INDEX_AD_LIBITIUM = -1, INDEX_UNDEFINED = -2;
@@ -65,6 +65,34 @@ public class WorldController implements Runnable, ActionListener {
 			if (world != null) {
 
 				world.initialize();
+					
+			}
+		} else if (_event.getSource().equals(view.getJbtn_initGrass())) {
+
+			if (world != null) {
+
+				world.initializeGrass();
+					
+			}
+		} else if (_event.getSource().equals(view.getJbtn_initWolf())) {
+
+			if (world != null) {
+
+				world.initializeWolf();
+					
+			}
+		} else if (_event.getSource().equals(view.getJbtn_initSheep())) {
+
+			if (world != null) {
+
+				world.initializeSheep();
+					
+			}
+		} else if (_event.getSource().equals(view.getJbtn_initMonkey())) {
+
+			if (world != null) {
+
+				world.initializeMonkey();
 					
 			}
 		} else 	if (_event.getSource().equals(view.getJbtn_run())) {

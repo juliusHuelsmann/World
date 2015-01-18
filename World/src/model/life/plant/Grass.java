@@ -9,8 +9,8 @@ import model.life.Plant;
 
 public class Grass extends Plant {
 	
-	final int reproducionTime = new Random(30).nextInt(99);
-	final int lifeTime = new Random(90).nextInt(105);
+	final int maxreproducionTime = 10 + new Random().nextInt(30);
+	final int maxlifeTime = 90 + new Random().nextInt(20);
 
 	public Grass(final int _positionLine, final int _positionCol) {
 		super(
@@ -18,7 +18,7 @@ public class Grass extends Plant {
 				new Point(9, 9),
 				new Point (_positionLine, _positionCol),
 				0.3);
-
+		
 		if (!( _positionCol == -1 && _positionLine == -1)) {
 			Statistic.increaseAmountGrass();
 		}
@@ -30,9 +30,11 @@ public class Grass extends Plant {
 	public void planckTime() {
 
 		increaseLifetime();
-		if ( getLifetime() % reproducionTime == 0) {
+		if ( getLifetime() % maxreproducionTime == 0) {
 			reproduce();
-		} else if (getLifetime() % lifeTime == 0) {
+		} 
+		
+		if (getLifetime() > maxlifeTime) {
 			die();
 		}
 	}

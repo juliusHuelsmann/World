@@ -9,8 +9,8 @@ import model.life.Plant;
 
 public class Berries extends Plant {
 
-	final int reproducionTime = new Random(15).nextInt(45);
-	final int lifeTime = new Random(30).nextInt(40);
+	final int reproducionTime = 15 + new Random().nextInt(30);
+	final int lifeTime = 30 + new Random().nextInt(10);
 	
 	public Berries(final int _positionLine, final int _positionCol) {
 		super(

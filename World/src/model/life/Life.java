@@ -53,7 +53,7 @@ public abstract class Life {
 				
 				wi[line][col].getLifeEmission().increase(this,
 						getEmissionMulitplicator() * 
-						Math.pow(0.7, Math.abs(line - posXinScopeEmission)) * 
+						Math.pow(0.9, Math.abs(line - posXinScopeEmission)) * 
 						Math.min(
 								Math.abs(posXinScopeEmission - Math.abs(line - posXinScopeEmission)),
 								Math.abs(posYinScopeEmission - Math.abs(col - posYinScopeEmission))));

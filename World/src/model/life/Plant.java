@@ -55,7 +55,9 @@ public abstract class Plant extends Life {
 			int col = new Random().nextInt(wi_scope[0].length);
 
 			if (wi_scope[row][col].getContainedGrass() == null
-					&& wi_scope[row][col].getAmountOfContained() <= 1) {
+					&& wi_scope[row][col].getAmountOfContained() <= 1
+					|| (wi_scope[row][col].getContainedGrass() != null
+					&& wi_scope[row][col].getAmountOfContained() == 2)) {
 
 				Plant plant = getPlant(
 						getPositionLine() + row - posXInScope, 

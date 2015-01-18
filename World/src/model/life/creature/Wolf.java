@@ -10,10 +10,14 @@ import model.map.Scope;
 
 public class Wolf extends Creature{
 
+	private double leaderIndex = new Random().nextInt(2) * new Random().nextDouble() * 15.0
+			+ new Random().nextDouble() * 1.0;
+	
+	
 	public Wolf(final int _positionLine, final int _positionCol) {
 		super(
 				//visibility scope
-				new Point(5, 5), 
+				new Point(6, 6), 
 
 				//position in scope of life form
 				new Point(1, 1),
@@ -22,19 +26,19 @@ public class Wolf extends Creature{
 				new Point(_positionLine, _positionCol),
 				
 				//delay
-				1,
+				2,
 				
 				//max time without food
-				20,
+				60,
 				
 				//max lifetime
-				120,
+				200,
 				
 				//min age pregnancy
 				25,
 				
 				//time of pregnancy
-				10,
+				20,
 				//emission scope
 				new Point(9, 9),
 				
@@ -57,26 +61,21 @@ public class Wolf extends Creature{
 			
 			if (getLifetime() % reactionTime == 0) {
 				
-				
-				
-				//different behavior if is pregnant or not
-//				if (false && isPregnant()) {
-//					
-//				} else {
-
-
-					Point p_partner = Scope.smellPartner(this);
-					Point p_nurriture = Scope.smellNuritureForWolf(this);
+				Point p_partner = Scope.smellPartner(this);
+				Point p_friend = Scope.smellWolfFriend(this);
+				Point p_nurriture = Scope.smellNuritureForWolf(this);
 
 					
-					if (getLifetime() < getMinAgePregnancy()) {
-						p_partner = null;
-					}
+				if (getLifetime() < getMinAgePregnancy()
+						&& p_nurriture == null) {
+					p_partner = null;
+				}
 					
-					if (p_partner == null && p_nurriture == null) {
-						
-						//random movement
-						
+				if (p_partner == null && p_nurriture == null) {
+				
+					//random movement
+					if (p_friend == null) {
+
 						
 						int row = new Random().nextInt(3) - 1;
 						int col = new Random().nextInt(3) - 1;
@@ -84,8 +83,13 @@ public class Wolf extends Creature{
 							row = 1;
 						}
 						move(row, col);
+					} else {
+
+						move(p_friend.x, p_friend.y);
+					}
 						
-					} else if (p_nurriture != null && p_partner == null) {
+						
+				} else if (p_nurriture != null && p_partner == null) {
 						move(p_nurriture.x, p_nurriture.y);
 						
 					} else if (p_nurriture == null && p_partner != null) {
@@ -123,5 +127,25 @@ public class Wolf extends Creature{
 	@Override
 	public String getPath() {
 		return "";
+	}
+
+
+
+
+	/**
+	 * @return the leaderIndex
+	 */
+	public double getLeaderIndex() {
+		return leaderIndex;
+	}
+
+
+
+
+	/**
+	 * @param leaderIndex the leaderIndex to set
+	 */
+	public void setLeaderIndex(double leaderIndex) {
+		this.leaderIndex = leaderIndex;
 	}
 }
