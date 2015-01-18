@@ -24,16 +24,16 @@ public class Wolf extends Creature{
 				1,
 				
 				//max time without food
-				108,
+				20,
 				
 				//max lifetime
 				120,
 				
 				//min age pregnancy
-				5,
+				25,
 				
 				//time of pregnancy
-				3,
+				10,
 				//emission scope
 				new Point(9, 9),
 				
@@ -56,14 +56,15 @@ public class Wolf extends Creature{
 				
 				
 				//different behavior if is pregnant or not
-				if (isPregnant()) {
-					
-				} else {
+//				if (false && isPregnant()) {
+//					
+//				} else {
 
 
-					Point p_partner = Scope.smellWolf(this);
+					Point p_partner = Scope.smellPartner(this);
 					Point p_nurriture = Scope.smellNuritureForWolf(this);
 
+					
 					if (getLifetime() < getMinAgePregnancy()) {
 						p_partner = null;
 					}
@@ -81,7 +82,6 @@ public class Wolf extends Creature{
 						move(row, col);
 						
 					} else if (p_nurriture != null && p_partner == null) {
-						System.out.println("move towards sheep");
 						move(p_nurriture.x, p_nurriture.y);
 						
 					} else if (p_nurriture == null && p_partner != null) {
@@ -90,23 +90,17 @@ public class Wolf extends Creature{
 					} else {
 						//smelled both wolf and sheep.
 						
-						if (getPercentageHunger() > 25) {
+						if (getPercentageAge() > 50) {
+
+							move(p_partner.x, p_partner.y);
+						} else if (getPercentageHunger() > 25) {
 
 							move(p_nurriture.x, p_nurriture.y);
 						}  else {
 							move(p_partner.x, p_partner.y);
-								
 						}
 					}
-					
-					
-					
-				}
-				
-				
-				
-				
-			
+//				}
 			}
 		} else {
 			die();

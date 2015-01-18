@@ -53,7 +53,7 @@ public class VWorldItem extends JPanel implements Observer{
 
 			int sum =  emission.getBerries() + emission.getMonkey() 
 					+ emission.getSheep() + emission.getTree()
-					+ emission.getWolf();
+					+ emission.getWolf() + emission.getGrass();
 			
 			int divisor = 0;
 			if ( emission.getBerries() > 0) {
@@ -65,6 +65,8 @@ public class VWorldItem extends JPanel implements Observer{
 			}if ( emission.getTree() > 0) {
 				divisor++;
 			}if ( emission.getWolf() > 0) {
+				divisor++;
+			}if ( emission.getGrass() > 0) {
 				divisor++;
 			}
 			divisor = Math.max (divisor, 1);

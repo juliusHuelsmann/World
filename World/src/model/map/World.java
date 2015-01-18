@@ -49,7 +49,7 @@ public class World extends Observable {
 			for (int column = 0; column < wi_world[line].length; column++) {
 				wi_world[line][column].getLifeEmission().planckTime();
 				if (wi_world[line][column].getLife() != null) {
-					wi_world[line][column].getLife().startPlanckTime();
+					wi_world[line][column].startLifePlanckTime();
 				}
 			}
 		}
@@ -59,7 +59,7 @@ public class World extends Observable {
 		for (int line = 0; line < wi_world.length; line++) {
 			for (int column = 0; column < wi_world[line].length; column++) {
 				if (wi_world[line][column].getLife() != null) {
-					wi_world[line][column].getLife().endPlanckTime();
+					wi_world[line][column].endLifePlanckTime();
 				} 
 				
 				wi_world[line][column].updateEmission();
@@ -108,7 +108,13 @@ public class World extends Observable {
 	public void initialize() {
 
 		final int amountWolfs = 5, amountSheep = 5, amountMonkey = 5,
-				amountBerries = 5, amountTrees = 5, amountGrass = 0;
+				amountBerries = 5, amountTrees = 5, amountGrass = 50;
+//		final int amountWolfs = 0, amountSheep = 60, amountMonkey = 0,
+//		amountBerries = 0, amountTrees = 1, amountGrass = 50;
+//		final int amountWolfs = 0, amountSheep = 10, amountMonkey = 0,
+//				amountBerries = 0, amountTrees = 1, amountGrass = 50;
+//		final int amountWolfs = 1, amountSheep = 0, amountMonkey = 0,
+//				amountBerries = 0, amountTrees = 0, amountGrass = 0;
 
 
 		Random rand = new Random();
@@ -118,10 +124,8 @@ public class World extends Observable {
 			int line = rand.nextInt(wi_world.length);
 			int column = new Random().nextInt(wi_world[0].length);
 			
-			if (wi_world[line][column].getLife() == null) {
-
-				wi_world[line][column].addLife(new Wolf(line, column));
-				wi_world[line][column].getLife().emitSmell();
+			if (wi_world[line][column].addLife(new Wolf(line, column))){
+				wi_world[line][column].emitLifeSmell();
 			} else {
 				currentEntity --;
 			}
@@ -132,10 +136,10 @@ public class World extends Observable {
 				currentEntity++) {
 			int line = rand.nextInt(wi_world.length);
 			int column = new Random().nextInt(wi_world[0].length);
-			
-				wi_world[line][column].addLife(new Grass(line, column));
-				wi_world[line][column].getLife().emitSmell();
-			
+
+			if (wi_world[line][column].addLife(new Grass(line, column))){
+				wi_world[line][column].emitLifeSmell();
+			}
 		}
 		for (int currentEntity = 0; 
 				currentEntity < amountSheep; 
@@ -144,10 +148,10 @@ public class World extends Observable {
 			int line = new Random().nextInt(wi_world.length);
 			int column = new Random().nextInt(wi_world[0].length);
 
-			if (wi_world[line][column].getLife() == null) {
+			if (wi_world[line][column].addLife(new Sheep(line, column))){
 
-				wi_world[line][column].addLife(new Sheep(line, column));
-				wi_world[line][column].getLife().emitSmell();
+				
+				wi_world[line][column].emitLifeSmell();
 			} else {
 				currentEntity --;
 			}
@@ -159,10 +163,8 @@ public class World extends Observable {
 
 			int line = new Random().nextInt(wi_world.length);
 			int column = new Random().nextInt(wi_world[0].length);
-			if (wi_world[line][column].getLife() == null) {
-
-			wi_world[line][column].addLife(new Monkey(line, column));
-			wi_world[line][column].getLife().emitSmell();
+			if (wi_world[line][column].addLife(new Monkey(line, column))){
+			wi_world[line][column].emitLifeSmell();
 			} else {
 				currentEntity --;
 			}
@@ -175,10 +177,9 @@ public class World extends Observable {
 			int line = new Random().nextInt(wi_world.length);
 			int column = new Random().nextInt(wi_world[0].length);
 
-			if (wi_world[line][column].getLife() == null) {
+			if (wi_world[line][column].addLife(new Berries(line, column))){
 
-				wi_world[line][column].addLife(new Berries(line, column));
-				wi_world[line][column].getLife().emitSmell();
+				wi_world[line][column].emitLifeSmell();
 			} else {
 				currentEntity --;
 			}
@@ -190,10 +191,8 @@ public class World extends Observable {
 			int line = new Random().nextInt(wi_world.length);
 			int column = new Random().nextInt(wi_world[0].length);
 
-			if (wi_world[line][column].getLife() == null) {
-
-				wi_world[line][column].addLife(new Tree(line, column));
-				wi_world[line][column].getLife().emitSmell();
+			if (wi_world[line][column].addLife(new Tree(line, column))) {
+				wi_world[line][column].emitLifeSmell();
 			} else {
 				currentEntity --;
 			}

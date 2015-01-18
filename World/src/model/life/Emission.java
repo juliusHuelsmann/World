@@ -6,14 +6,15 @@ import model.life.creature.Monkey;
 import model.life.creature.Sheep;
 import model.life.creature.Wolf;
 import model.life.plant.Berries;
+import model.life.plant.Grass;
 import model.life.plant.Tree;
 import model.util.Status;
 
 public class Emission {
 
-	private double monkey = 0, sheep = 0, wolf = 0, berries = 0, tree = 0;
-	private Color clr_monkey, clr_sheep, clr_wolf, clr_berries, clr_tree;
-	private final double reduction = 0.1;
+	private double monkey = 0, sheep = 0, wolf = 0, berries = 0, tree = 0, grass = 0;
+	private Color clr_monkey, clr_sheep, clr_wolf, clr_berries, clr_tree, clr_grass;
+	private final double reduction = 0.5;
 	
 	
 	public Emission() {
@@ -22,6 +23,7 @@ public class Emission {
 		clr_wolf = new Color(0,0,0);
 		clr_berries= new Color(0,0,0);
 		clr_tree = new Color(0,0,0);
+		clr_grass = new Color(0,0,0);
 	}
 	public void planckTime() {
 		final double perc = 1.0 - reduction;
@@ -30,31 +32,34 @@ public class Emission {
 		wolf = 1.0 * wolf * perc;
 		berries = 1.0 * berries * perc;
 		tree = 1.0 * tree * perc;
+		grass = 1.0 * grass * perc;
 	}
 	
 	
 	public Color getColor() {
 		final double divisor;
-		if (getMonkey() + getSheep() + getWolf() + getBerries() + getTree() == 0) {
+		if (getMonkey() + getSheep() + getWolf() + getBerries() + getTree() + getGrass() == 0) {
 			return Color.black;
 		} else {
-			divisor = monkey + sheep + wolf + berries + tree;
+			divisor = monkey + sheep + wolf + berries + tree + grass;
 		}
 
 		int red = (int) ((clr_monkey.getRed() * monkey + clr_sheep.getRed() * sheep
 				+ clr_wolf.getRed() * wolf + clr_berries.getRed() * berries
-				+ clr_tree.getRed() * tree ) 
+				+ clr_tree.getRed() * tree + clr_grass.getRed() * grass) 
 				/ divisor) ;
 		int green = (int) ((clr_monkey.getGreen() * monkey + clr_sheep.getGreen() * sheep
 				+ clr_wolf.getGreen() * wolf + clr_berries.getGreen() * berries
-				+ clr_tree.getGreen() * tree ) 
+				+ clr_tree.getGreen() * tree+ clr_grass.getGreen() * grass ) 
 				/ divisor) ;
 
 
 		int blue = (int) ((clr_monkey.getBlue() * monkey + clr_sheep.getBlue() * sheep
 				+ clr_wolf.getBlue() * wolf + clr_berries.getBlue() * berries
-				+ clr_tree.getBlue() * tree ) 
+				+ clr_tree.getBlue() * tree + clr_grass.getBlue() * grass) 
 				/ divisor) ;
+		
+		
 		
 		return new Color(red, green, blue);
 	}
@@ -74,8 +79,11 @@ public class Emission {
 		} else if (_life instanceof Tree) {
 			increaseTree(_add);
 			clr_tree = _life.getClrBackground();
+		} else if (_life instanceof Grass) {
+			increaseGrass(_add);
+			clr_grass = _life.getClrBackground();
 		} else {
-			Status.getLogger().severe("implementation error.");
+			Status.getLogger().severe("implementation error." + _life);
 		}
 	}
 	
@@ -91,6 +99,8 @@ public class Emission {
 			return getBerries();
 		} else if (_smelledCreature instanceof Tree) {
 			return getTree();
+		}else if (_smelledCreature instanceof Grass) {
+			return getGrass();
 		} else {
 			Status.getLogger().severe("implementation error");
 			return 0;
@@ -99,6 +109,10 @@ public class Emission {
 
 	public void increaseMoney(final double _add) {
 		monkey += _add;
+	}
+
+	public void increaseGrass(final double _add) {
+		grass += _add;
 	}
 
 	public void increaseSheep(final double _add) {
@@ -116,12 +130,18 @@ public class Emission {
 	public void increaseTree(final double _add) {
 		tree += _add;
 	}
-	
+
 	/**
 	 * @return the monkey
 	 */
 	public int getMonkey() {
 		return (int) (monkey);
+	}
+	/**
+	 * @return the monkey
+	 */
+	public int getGrass() {
+		return (int) (grass);
 	}
 
 	/**

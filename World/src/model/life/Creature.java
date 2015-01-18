@@ -2,8 +2,6 @@ package model.life;
 
 import java.awt.Point;
 import java.util.Random;
-
-import model.life.creature.Monkey;
 import model.life.creature.Sheep;
 import model.life.creature.Wolf;
 import model.map.Scope;
@@ -45,6 +43,9 @@ public abstract class Creature extends Life {
 	
 	private Point pnt_positionInScope;
 
+	private void setTimeWithoutFood(int _timewithoutfood) {
+		this.cTimeWithoutFood = _timewithoutfood;
+	}
 	
 	/**
 	 * Minimal age after which a creature is getitng pregnant and
@@ -135,17 +136,16 @@ public abstract class Creature extends Life {
 	
 	public void birth() {
 
-		
 		WorldItem[][]  wi_scope = Scope.getVisibilityScope(this);
 		
 		
 		//if the current creature exists on map
 		if (wi_scope != null 
 				&& wi_scope[pnt_positionInScope.x][pnt_positionInScope.y]
-						.getLife() == this) {
+						.getLife().find(this)) {
 			
-			wi_scope[pnt_positionInScope.x][pnt_positionInScope.y]
-					.remvoeLife(this);
+//			wi_scope[pnt_positionInScope.x][pnt_positionInScope.y]
+//					.remvoeLife(this);
 			
 			
 			boolean born = false;
@@ -157,18 +157,25 @@ public abstract class Creature extends Life {
 									positionCol + dCol, this);
 					
 					if (wi_scope != null && wi_newScope != null
-							&& wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
-									.getLife() == null) {
+							&& (wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
+									.getAmountOfContained() == 0
+									|| 
+									(wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
+											.getAmountOfContained() == 1 
+											&&
 
+											(wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
+													.containsGrass())))) {
+
+						Creature c = getCreature(positionLine + dLine, 
+								positionCol + dCol);
+						c.setTimeWithoutFood(cTimeWithoutFood / 2);
 						wi_newScope[getPnt_positionInScope().x][getPnt_positionInScope().y]
-								.addLife(getCreature(positionLine + dLine, 
-										positionCol + dCol));
+								.addLife(c);
 						born = true;
 					}
 				}
 			}
-
-
 		} else {
 //			System.out.println("error");
 //			Status.getLogger().severe("not initialized yet" + wi_newScope);
@@ -184,45 +191,88 @@ public abstract class Creature extends Life {
 						positionLine + _dX, 
 						positionCol + _dY, this);
 		
-		if (wi_scope != null && wi_newScope != null
-				&& wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
-						.getLife() == null) {
+		if (wi_scope != null 
+				&& wi_newScope != null) {
 			
-			wi_scope[pnt_positionInScope.x][pnt_positionInScope.y]
-					.remvoeLife(this);
-
-			positionLine += _dX;
-			positionCol  += _dY;
-
-			wi_newScope[getPnt_positionInScope().x][getPnt_positionInScope().y]
-					.addLife(this);
-		} else if (wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
-						.getLife() != null){
 			
-			if (wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
-						.getLife() instanceof Wolf) {
-				if (this instanceof Wolf) {
+			//interaction
+			
+			if (this instanceof Sheep) {
 
-					System.out.println("not implemented yet");
-					System.out.println(getClass());
-					
-				} 
-				
-			} else if (wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
-						.getLife() instanceof Sheep
-						|| wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
-								.getLife() instanceof Monkey) {
-				if (this instanceof Wolf) {
+				//sheep vs sheep
+				if (wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
+								.containsSheep()){
+
+					if ( this.isFeminin() != wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
+							.getContainedSheep().isFeminin()) {
+						
+						if (this.isFeminin()) {
+							setPregnant(true);
+						} else {
+							wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
+									.getContainedSheep().setPregnant(true);
+						}
+					}							
+						
+				} else if(wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
+								.containsGrass()) {
 
 					cTimeWithoutFood = 0;
-
 					wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
-							.remvoeLife(this);
+							.removeGrass();
 					move(_dX, _dY);
+				}
+				
+				
+				
+				
+				
+				
+				
+				
+			}
+			
+			
+			if (wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
+						.addLife(this)) {
+			
+				wi_scope[pnt_positionInScope.x][pnt_positionInScope.y]
+						.remvoeLife(this);
+				positionLine += _dX;
+				positionCol  += _dY;
+				
+			} else {
+				if (wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
+						.containsWolf()) {
+					if (this instanceof Wolf) {
+						
+						if ( this.isFeminin() != wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
+								.getContainedWolf().isFeminin()) {
+							
+							if (this.isFeminin()) {
+								setPregnant(true);
+							} else {
+								wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
+										.getContainedWolf().setPregnant(true);
+							}
+						} else {
+//							System.out.println("wrong.");
+						}
+					} 
 					
-				} else if (this instanceof Sheep){
-					System.out.println("not implemented yet");
-					System.out.println(getClass());
+				} else if (wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
+						.containsSheep()
+							|| wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
+									.containsMonkey()) {
+					if (this instanceof Wolf) {
+	
+						cTimeWithoutFood = 0;
+	
+						wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
+								.removeCreature();
+						move(_dX, _dY);
+						
+					} 
 				}
 			}
 //			System.out.println("error");
@@ -326,6 +376,14 @@ public abstract class Creature extends Life {
 	 */
 	public void setMinAgePregnancy(int minAgePregnancy) {
 		this.minAgePregnancy = minAgePregnancy;
+	}
+
+
+	/**
+	 * @param pregnant the pregnant to set
+	 */
+	public void setPregnant(boolean pregnant) {
+		this.pregnant = pregnant;
 	}
 
 }

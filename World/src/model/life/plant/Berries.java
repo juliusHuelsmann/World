@@ -2,11 +2,15 @@ package model.life.plant;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.util.Random;
 
 import model.life.Plant;
 
 public class Berries extends Plant {
 
+	final int reproducionTime = new Random(15).nextInt(45);
+	final int lifeTime = new Random(30).nextInt(40);
+	
 	public Berries(final int _positionLine, final int _positionCol) {
 		super(
 				//emission scope
@@ -29,8 +33,20 @@ public class Berries extends Plant {
 		return "";
 	}
 
+
 	@Override
 	public void planckTime() {
+
 		increaseLifetime();
+		if ( getLifetime() % reproducionTime == 0) {
+			
+			int i = new Random().nextInt(4);
+			for (int j = 0; j < i; j++) {
+
+				reproduce();
+			}
+		} else if (getLifetime() % lifeTime == 0) {
+			die();
+		}
 	}
 }

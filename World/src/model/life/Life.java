@@ -31,10 +31,6 @@ public abstract class Life {
 	private boolean moved = false;
 	public void startPlanckTime(){
 		
-		if (this instanceof Tree) {
-			System.out.println(allowedToMove());
-		}
-
 		if (allowedToMove()) {
 			planckTime();
 			moved = true;
@@ -53,13 +49,20 @@ public abstract class Life {
 		
 		for (int line = 0; line < wi.length; line++) {
 			for (int col = 0; col < wi[line].length; col++) {
+				
 				wi[line][col].getLifeEmission().increase(this,
 						getEmissionMulitplicator() * 
+						Math.pow(0.7, Math.abs(line - posXinScopeEmission)) * 
 						Math.min(
 								Math.abs(posXinScopeEmission - Math.abs(line - posXinScopeEmission)),
 								Math.abs(posYinScopeEmission - Math.abs(col - posYinScopeEmission))));
 			}
 		}
+		
+
+		wi[posXinScopeEmission][posYinScopeEmission].getLifeEmission().increase(
+				this, 2); 
+		
 	}
 	
 	public void endPlanckTime() {

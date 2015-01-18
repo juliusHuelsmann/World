@@ -2,10 +2,14 @@ package model.life.plant;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.util.Random;
 
 import model.life.Plant;
 
 public class Tree extends Plant {
+
+	final int reproducionTime = new Random(60).nextInt(105);
+	final int lifeTime = new Random(90).nextInt(105);
 
 	public Tree(final int _positionLine, final int _positionCol) {
 		super(
@@ -21,9 +25,9 @@ public class Tree extends Plant {
 	public void planckTime() {
 
 		increaseLifetime();
-		if ( getLifetime() % 24 == 0) {
+		if ( getLifetime() % reproducionTime == 0) {
 			reproduce();
-		} else if (getLifetime() % 50 == 0) {
+		} else if (getLifetime() % lifeTime == 0) {
 			die();
 		}
 	}

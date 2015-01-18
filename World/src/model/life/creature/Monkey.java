@@ -3,7 +3,9 @@ package model.life.creature;
 import java.awt.Color;
 import java.awt.Point;
 import java.util.Random;
+
 import model.life.Creature;
+import model.map.Scope;
 
 public class Monkey extends Creature{
 
@@ -43,15 +45,54 @@ public class Monkey extends Creature{
 
 	@Override
 	public void planckTime() {
-		increaseLifetime();
 		
-		if (getLifetime() % reactionTime == 0) {
-			int row = new Random().nextInt(2) - 1;
-			int col = new Random().nextInt(2) - 1;
-			if (row == col && col == 0) {
-				row = 1;
+		if (isAlive()) {
+
+			increaseLifetime();
+			
+			if (getLifetime() % reactionTime == 0) {
+				
+				
+					Point p_partner = Scope.smellPartner(this);
+					Point p_nurriture = Scope.smellNuritureForMonkey(this);
+
+					
+					if (getLifetime() < getMinAgePregnancy()) {
+						p_partner = null;
+					}
+					
+					if (p_partner == null && p_nurriture == null) {
+						
+						//random movement
+						
+						
+						int row = new Random().nextInt(3) - 1;
+						int col = new Random().nextInt(3) - 1;
+						if (row == col && col == 0) {
+							row = 1;
+						}
+						move(row, col);
+						
+					} else if (p_nurriture != null && p_partner == null) {
+						move(p_nurriture.x, p_nurriture.y);
+						
+					} else if (p_nurriture == null && p_partner != null) {
+
+						move(p_partner.x, p_partner.y);
+					} else {
+						//smelled both wolf and sheep.
+						
+						if (getPercentageHunger() > 25) {
+
+							move(p_nurriture.x, p_nurriture.y);
+							
+						}  else {
+							move(p_partner.x, p_partner.y);
+						}
+					}
 			}
-			move(row, col);
+		} else {
+			die();
 		}
 	}
 	

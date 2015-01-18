@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import model.life.Creature;
 import model.life.Emission;
 import model.life.Life;
+import model.util.adt.list.List;
 import view.map.VWorldItem;
 import view.util.FetchButon;
 
@@ -23,7 +24,7 @@ public class CWorldItem implements ActionListener {
 			if (fb.getObj() instanceof VWorldItem) {
 				VWorldItem vwi = (VWorldItem) fb.getObj();
 				Emission  e = vwi.getWorldItem().getLifeEmission();
-				Life l = vwi.getWorldItem().getLife();
+				List<Life> l = vwi.getWorldItem().getLife();
 				
 				
 				String text = 
@@ -32,24 +33,31 @@ public class CWorldItem implements ActionListener {
 								+ "Monkey:\t" + e.getMonkey() + "\n"
 								+ "Tree:\t" + e.getTree() + "\n"
 								+ "Berries:\t" + e.getBerries() + "\n"
+								+ "Grass:\t" + e.getGrass() + "\n"
 								;
 
 				boolean killable = false;
 				if (l != null) {
-					if (l instanceof Creature) {
+					System.out.println("hier");
+					l.toFirst();
+					while(!l.isBehind() && !l.isEmpty()) {
+						if (l.getItem() instanceof Creature) {
 
-						Creature c = (Creature) l;
-						text += "\n\n" + "Creature"
-						+ "\nHunger:\t" + c.getPercentageHunger() 
-						+ "\nPregnant:\t" + c.isPregnant()
-						+ "\npercentage:\t" + c.getPercentagePregancy()
-						+ "\nfemale:\t" + c.isFeminin()
-						+ "\nage:\t" + c.getPercentageAge();
+							Creature c = (Creature) l.getItem();
+							text += "\n\n" + "Creature"
+							+ "\nHunger:\t" + c.getPercentageHunger() 
+							+ "\nPregnant:\t" + c.isPregnant()
+							+ "\npercentage:\t" + c.getPercentagePregancy()
+							+ "\nfemale:\t" + c.isFeminin()
+							+ "\nage:\t" + c.getPercentageAge();
 
-					}else {
+						}else {
 
-						text += "\n\n" + "Plant";
+							text += "\n\n" + "Plant";
+						}
+						l.next();
 					}
+					
 					killable = true;
 					text += "\nDo you want to kill instance of Life?";
 				}
@@ -57,7 +65,8 @@ public class CWorldItem implements ActionListener {
 				int j = JOptionPane.showConfirmDialog(null, text );
 				if (killable && (j == JOptionPane.YES_OPTION)) {
 
-					l.die();
+					l.toFirst();
+					l.getItem().die();
 				}
 			}
 		}
