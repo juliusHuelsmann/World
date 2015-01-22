@@ -168,8 +168,8 @@ public class World extends Observable {
 	public void initialize() {
 
 		final int percentageWolfs = 5, percentageSheep = 5, percentageMonkey = 5,
-				percentageBerries = 5, percentageTrees = 5, percentageGrass = 50,
-				percentageEinzeller = 5;
+				percentageBerries = 5, percentageTrees = 5, percentageGrass = 50;
+//				percentageEinzeller = 5;
 	
 		final int 
 		amountWolfs = percentageWolfs * wi_world.length * wi_world[0].length / 100,
@@ -178,8 +178,8 @@ public class World extends Observable {
 		amountGrass = percentageGrass * wi_world.length * wi_world[0].length / 100,
 		amountTrees = percentageTrees * wi_world.length * wi_world[0].length / 100,
 		amountBerries = percentageBerries * wi_world.length * wi_world[0].length / 100,
-		amountEinzeller = percentageEinzeller * wi_world.length * wi_world[0].length / 100;
-
+//		amountEinzeller = percentageEinzeller * wi_world.length * wi_world[0].length / 100;
+		amountEinzeller = 0;
 
 		Random rand = new Random();
 		for (int currentEntity = 0; 

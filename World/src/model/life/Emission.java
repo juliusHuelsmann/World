@@ -38,7 +38,8 @@ public class Emission {
 	
 	public Color getColor() {
 		final double divisor;
-		if (getMonkey() + getSheep() + getWolf() + getBerries() + getTree() + getGrass() == 0) {
+		if (getMonkey() + getSheep() + getWolf() + getBerries() 
+				+ getTree() + getGrass() == 0) {
 			return Color.black;
 		} else {
 			divisor = monkey + sheep + wolf + berries + tree + grass;
@@ -59,7 +60,22 @@ public class Emission {
 				+ clr_tree.getBlue() * tree + clr_grass.getBlue() * grass) 
 				/ divisor) ;
 		
-		
+		if (red > 255) {
+			red = 255;
+		} else {
+			Status.getLogger().severe("impl. error failed to add something?");
+		}
+		if (green > 255) {
+			green = 255;
+		} else {
+			Status.getLogger().severe("impl. error failed to add something?");
+		}
+		if (blue > 255) {
+			blue = 255;
+		} else {
+			Status.getLogger().severe("impl. error failed to add something?");
+		}
+				
 		
 		return new Color(red, green, blue);
 	}

@@ -2,10 +2,12 @@ package view.map;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
@@ -15,6 +17,9 @@ import model.util.Status;
 public class VWorld extends JPanel implements Observer  {
 
 	private VWorldItem[][] vwi;
+	
+	private JLabel jlbl_image;
+	private BufferedImage bi;
 
 	private JTextArea jta_text;
 	
@@ -28,6 +33,10 @@ public class VWorld extends JPanel implements Observer  {
 		jta_text.setFocusable(false);
 		jta_text.setBorder(null);
 		super.add(jta_text);
+		
+		jlbl_image = new JLabel();
+		jlbl_image.setVisible(false);
+		super.add(jlbl_image);
 	}
 	
 	
@@ -37,6 +46,8 @@ public class VWorld extends JPanel implements Observer  {
 		
 		int iconX = getWidth() * 3 / 4;
 		jta_text.setBounds(iconX, 20, getWidth() - iconX, getHeight() - 30);
+
+		jlbl_image.setBounds(0, 0, iconX, getHeight());
 		
 		for (int line = 0; vwi != null && line < vwi.length; line++) {
 			for (int column = 0; column < vwi[line].length; column++) {

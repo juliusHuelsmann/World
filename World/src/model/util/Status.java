@@ -10,6 +10,11 @@ public final class Status {
 	 */
 	private static Status instance;
 	
+	public static final int DISPLAY_BUTTON_ARRAY = 0,
+			DISPLAY_IMAGE = 1,
+			DISPLAY_NOTHING = 2;
+	
+	private static int displayMode = DISPLAY_BUTTON_ARRAY;
 	
 	/**
 	 * 
@@ -72,5 +77,25 @@ public final class Status {
 	 */
 	public void setDelayForPlanckTime(int delayForPlanckTime) {
 		this.delayForPlanckTime = delayForPlanckTime;
+	}
+
+
+
+
+	/**
+	 * @return the displayMode
+	 */
+	public static int getDisplayMode() {
+		return displayMode;
+	}
+
+
+
+
+	/**
+	 * @param displayMode the displayMode to set
+	 */
+	public static void setDisplayMode(int displayMode) {
+		Status.displayMode = displayMode;
 	}
 }

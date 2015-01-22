@@ -349,6 +349,8 @@ public class List<Type> implements Serializable {
         } else {
         	
         	
+        	new Error("").printStackTrace();
+        	
         	//print warning message
         	Status.getLogger().warning("remove null item out of list: Perform"
         			+ " previous or next for being able to pass the list"

@@ -20,7 +20,30 @@ import model.util.adt.list.List;
  *
  */
 public class WorldItem extends Observable {
-	
+
+
+	@Override public void notifyObservers(Object _o) {
+		
+		switch (Status.getDisplayMode()) {
+
+		case Status.DISPLAY_BUTTON_ARRAY:
+			
+			super.notifyObservers(_o);
+			break;
+			
+			
+		case Status.DISPLAY_IMAGE:
+		
+			//TODO: display image bufferedimage.
+			break;
+			
+		case Status.DISPLAY_NOTHING:
+			break;
+			default: 
+				break;
+		}
+		
+	}
 	
 	private List<Life> life = null;
 	
@@ -285,7 +308,7 @@ public class WorldItem extends Observable {
 			if (life.getElement().getContent() instanceof Grass){
 
 				life.getElement().getContent().die();
-				life.remove();
+//				life.remove();
 			}
 			life.next();
 		}

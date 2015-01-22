@@ -478,7 +478,7 @@ public class SecureListSort<SecureListType> implements Serializable {
     	}
     }
     
-    
+
     /**
      * goes behind the searched position.
      * 
@@ -549,5 +549,92 @@ public class SecureListSort<SecureListType> implements Serializable {
 	            findSorted(_searchCriteria, _transactionID, _closedActionID);
 	    	}
     	}
+    }
+
+    /**
+     * Searches the element which has got exactly the id which is searched.
+     * If the element has been found this method returns its content, otherwise
+     * null is returned.
+     * 
+     * 
+     * @param _searchCriteria 
+     * 				the index of sorting.
+     * 
+     * @param _transactionID
+     * 				the id of the current operation for being able to start a 
+     * 				new transaction.
+     * 
+     * @param _closedActionID 
+     * 				the id of the closed action to which performs the
+     * 				method call.
+     * 
+     * @param 		
+     * 				the content of the found item.
+     */
+    public final synchronized SecureListType searchSorted(
+    		final double _searchCriteria,
+    		final int _transactionID, final int _closedActionID) {
+        
+    	//if list is empty there is nothing to do. Thus only perform action 
+    	//if list is not empty.
+    	if (!ls.isEmpty()) {
+    		
+    		//if the list is neither behind nor in front of perform action
+    		//otherwise go to the last respectively the first item.
+	    	if (!ls.isBehind() && !ls.isInFrontOf()) {
+	    		
+	    		//if the current element has got an inferior index proceed
+	    		//in list while the current item has got 
+	    		if (ls.getElement() != null 
+	    				&& ls.getElement().getSortedIndex() < _searchCriteria) {
+		    		while (!ls.isBehind() && ls.getElement().getSortedIndex() 
+		    				< _searchCriteria) {
+		    			ls.next(_transactionID, _closedActionID);
+		    		}
+
+		    		
+	    		} else if (ls.getElement() != null) {
+		    		while (!ls.isInFrontOf()
+		    				
+		    				&& ls.getElement().getSortedIndex() 
+		    				> _searchCriteria) {
+		    			ls.previous(_transactionID, _closedActionID);
+		    		}
+		    		
+		    		
+	    		} else {
+	    			ls.toFirst(_transactionID, _closedActionID);
+	    			
+	    			while (ls.getItem() == null) {
+	    				ls.next(_transactionID, _closedActionID);
+	    			}
+	    			if (!ls.isBehind()) {
+
+		    			return searchSorted(
+		    					_searchCriteria, _transactionID, 
+		    					_closedActionID);
+	    			} else {
+	    				return null;
+	    			}
+	    		}
+	    	} else if (ls.isBehind()) {
+	    		ls.toLast(_transactionID, _closedActionID);
+	            return searchSorted(
+	            		_searchCriteria, _transactionID, _closedActionID);
+	    	} else {
+	    		ls.toFirst(_transactionID, _closedActionID);
+	            return searchSorted(
+	            		_searchCriteria, _transactionID, _closedActionID);
+	    	}
+    	}
+    	
+
+		if (ls.getElement() == null) {
+			return null;
+		}
+		if (ls.getElement().getSortedIndex() == _searchCriteria) {
+			return ls.getItem();
+		} 
+		return null;
     }
 }
