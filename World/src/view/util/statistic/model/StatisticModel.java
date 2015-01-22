@@ -75,9 +75,7 @@ public class StatisticModel extends Observable {
 		this.historyLength = _historyLength;
 		
 		//initialize the BufferedImage with specified size.
-		this.bi_diagram = new BufferedImage(
-				_d_sizeDiagram.width, _d_sizeDiagram.height, 
-				BufferedImage.TYPE_INT_RGB);
+		setImageSize(_d_sizeDiagram);
 	}
 	
 	
@@ -236,7 +234,7 @@ public class StatisticModel extends Observable {
 		//by an external process nor changing the state of the list.
 		final int transactionID = sls_diagrams.startTransaction("set Color", 
 				SecureList.ID_NO_PREDECESSOR);
-		final int closedActionID = sls_diagrams.startTransaction("set Color", 
+		final int closedActionID = sls_diagrams.startClosedAction("set Color", 
 				SecureList.ID_NO_PREDECESSOR);
 		
 		//fetch the demanded diagram out of sortedList
@@ -291,7 +289,7 @@ public class StatisticModel extends Observable {
 		//by an external process nor changing the state of the list.
 		final int transactionID = sls_diagrams.startTransaction("notify", 
 				SecureList.ID_NO_PREDECESSOR);
-		final int closedActionID = sls_diagrams.startTransaction("notify", 
+		final int closedActionID = sls_diagrams.startClosedAction("notify", 
 				SecureList.ID_NO_PREDECESSOR);
 
 		//pass the list
@@ -400,7 +398,7 @@ public class StatisticModel extends Observable {
 		//by an external process nor changing the state of the list.
 		final int transactionID = sls_diagrams.startTransaction("add point", 
 				SecureList.ID_NO_PREDECESSOR);
-		final int closedActionID = sls_diagrams.startTransaction("add point", 
+		final int closedActionID = sls_diagrams.startClosedAction("add point", 
 				SecureList.ID_NO_PREDECESSOR);
 		
 		//fetch the demanded diagram out of sortedList
@@ -431,6 +429,14 @@ public class StatisticModel extends Observable {
 		this.bi_diagram = new BufferedImage(
 				_d_sizeDiagram.width, _d_sizeDiagram.height, 
 				BufferedImage.TYPE_INT_RGB);
+		
+		//initialize the array with 
+		final int rgbWiht = new Color(255, 255, 255).getRGB();
+		for (int x = 0; x < bi_diagram.getWidth(); x++) {
+			for (int y = 0; y < bi_diagram.getHeight(); y++) {
+				bi_diagram.setRGB(x, y, rgbWiht);
+			}	
+		}
 	}
 	
 	/**

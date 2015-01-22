@@ -1,4 +1,4 @@
-package view.util.statistic;
+package view.util.statistic.view;
 
 import javax.swing.JFrame;
 
@@ -8,8 +8,4 @@ public class StatisticView extends JFrame {
 		
 	}
 	
-	
-	public static void main(String[]args){
-		
-	}
 }

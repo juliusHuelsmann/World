@@ -3,6 +3,7 @@ package view.util.statistic.model;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
+
 public class Diagram {
 
 
@@ -53,25 +54,29 @@ public class Diagram {
 		//not by the amount of values filled because if the array has 
 		//not been entirely filled, the painting has to start at the
 		//right corner of the BufferedImage.
-		final int displayWidthValue = _bi.getWidth() / values.length;
+		final double displayWidthValue = 1.0 *_bi.getWidth() / values.length ;
 		final double displayHeightValue = 1;
-		
 		
 		//the amount of pixel by which the drawing is shifted in x direction.
 		final int shiftX = 
 				
 				//the amount of values which is not initialized yet
-				(values.length - _amountOfValuesFilled)
+				(int) ((values.length - _amountOfValuesFilled)
 				
 				//multiplied by the size one value has got in BufferedImage
-				* displayWidthValue;
+				* displayWidthValue);
 		
+		
+		int predecessorXinImage = -1,
+				predecessoryinImage = -1;
 		for (int i = 0; i < _amountOfValuesFilled; i++) {
 			
 			final int positionInArray = (i + _startLocationInArray) % values.length;
 			
-			int xInBufferedImage = shiftX + i;
-			int yInBufferedImage = (int) (values[positionInArray]
+			int xInBufferedImage = shiftX + (int) (i * displayWidthValue);
+			int yInBufferedImage = 
+					_bi.getHeight() - 1 - 
+					(int) (values[positionInArray]
 					* displayHeightValue);
 			
 			if (xInBufferedImage < 0 || xInBufferedImage > _bi.getWidth()) {
@@ -96,11 +101,36 @@ public class Diagram {
 				}
 			}
 
-			_bi.setRGB(xInBufferedImage, yInBufferedImage, clr_line.getRGB());
+
+			if (predecessorXinImage != -1 && predecessoryinImage != -1) {
+				paintLine(_bi, predecessorXinImage, xInBufferedImage, 
+						predecessoryinImage, yInBufferedImage, clr_line.getRGB());
+			}
+			predecessorXinImage = xInBufferedImage;
+			predecessoryinImage = yInBufferedImage;
 			
 		}
 		
 	}
+	
+	private static void paintLine(
+			final BufferedImage _bi,
+			final int _x1, final int _x2, final int _y1, final int _y2,
+			final int _clr) {
+
+		//compute delta values
+		int dX = (int) (_x1 - _x2);
+		int dY = (int) (_y1 - _y2);
+
+        //print the line between the two points
+        for (int a = 0; a < Math.max(Math.abs(dX), Math.abs(dY)); a++) {
+            int plusX = a * dX /  Math.max(Math.abs(dX), Math.abs(dY));
+            int plusY = a * dY /  Math.max(Math.abs(dX), Math.abs(dY));
+            _bi.setRGB(_x1 - plusX, _y1 - plusY, _clr);
+        }
+	}
+	
+	
 	
 	
 	
