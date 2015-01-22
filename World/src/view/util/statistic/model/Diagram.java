@@ -1,12 +1,9 @@
 package view.util.statistic.model;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.util.Observable;
+import java.awt.image.BufferedImage;
 
-import model.util.adt.list.SecureList;
-
-public class Diagram extends Observable {
+public class Diagram {
 
 
 	private double [] values;
@@ -34,23 +31,75 @@ public class Diagram extends Observable {
 		//save values
 		this.clr_line = _clr_line;
 		this.values = new double[_historyLength];
-		this.nextPositionInArray = 0;
-		this.amountValues = 0;
 	}
 	
-	public synchronized void addValue(int _newValue) {
+	public synchronized void addValue(
+			final int _id_in_array,
+			final int _newValue) {
 		
 		//save value
-		values[nextPositionInArray] = _newValue;
+		values[_id_in_array] = _newValue;
+	}
+	
+	public synchronized void paintEntirely(
+			
+			final int _startLocationInArray,
+			final int _amountOfValuesFilled,
+			BufferedImage _bi) {
 		
-		//increase position in values field and the amount of values saved in 
-		//values array.
-		increasePositionInField();
-		increaseAmountValues();
 		
-		//compute BufferedImage
+		//the size of one displayed value.
+		//the size of the image is divided by the length of the array and
+		//not by the amount of values filled because if the array has 
+		//not been entirely filled, the painting has to start at the
+		//right corner of the BufferedImage.
+		final int displayWidthValue = _bi.getWidth() / values.length;
+		final double displayHeightValue = 1;
 		
-		//set changed etc.
+		
+		//the amount of pixel by which the drawing is shifted in x direction.
+		final int shiftX = 
+				
+				//the amount of values which is not initialized yet
+				(values.length - _amountOfValuesFilled)
+				
+				//multiplied by the size one value has got in BufferedImage
+				* displayWidthValue;
+		
+		for (int i = 0; i < _amountOfValuesFilled; i++) {
+			
+			final int positionInArray = (i + _startLocationInArray) % values.length;
+			
+			int xInBufferedImage = shiftX + i;
+			int yInBufferedImage = (int) (values[positionInArray]
+					* displayHeightValue);
+			
+			if (xInBufferedImage < 0 || xInBufferedImage > _bi.getWidth()) {
+
+				System.err.println("xcorrdinate err " + xInBufferedImage);
+				if (xInBufferedImage < 0) {
+					xInBufferedImage = 0;
+				}
+				if (xInBufferedImage >= _bi.getWidth()) {
+					xInBufferedImage = _bi.getWidth() - 1;
+				}
+			}
+			
+			if (yInBufferedImage < 0 || yInBufferedImage >= _bi.getHeight()) {
+
+				System.err.println("ycorrdinate err " + yInBufferedImage);				
+				if (yInBufferedImage < 0) {
+					yInBufferedImage = 0;
+				}
+				if (yInBufferedImage >= _bi.getHeight()) {
+					yInBufferedImage = _bi.getHeight() - 1;
+				}
+			}
+
+			_bi.setRGB(xInBufferedImage, yInBufferedImage, clr_line.getRGB());
+			
+		}
+		
 	}
 	
 	

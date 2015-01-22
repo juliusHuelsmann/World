@@ -2,14 +2,41 @@ package view.util.statistic.model;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.util.Observer;
-
+import java.awt.image.BufferedImage;
+import java.util.Observable;
 import model.util.Status;
 import model.util.adt.list.SecureList;
 import model.util.adt.list.SecureListSort;
 
-public class StatisticModel {
+public class StatisticModel extends Observable {
 
+	
+
+	/**
+	 * The next position in field indicates where to write the next-added value.
+	 * 
+	 * If the array is entirely filled, the 'next-position-in-field' contains
+	 * the value from where to start drawing the diagram.
+	 */
+	private int nextPositionInArray = 0;
+	
+	/**
+	 * Increase the amount of values that are currently saved inside the 
+	 * diagram's values array.
+	 * At the beginning of the displaying of a diagram, the array is not
+	 * completely filled. Therefore this argument indicates the final 
+	 * position of the values array which is printed to the diagram
+	 * and one can calculate the current position of the points painted
+	 * to BufferedImage.
+	 */
+	private int amountValues = 0;
+
+	
+	/**
+	 * The length of the Diagram's history array that contains all the statistic
+	 * values that are painted to the diagram.
+	 */
+	private int historyLength;
 	
 	/**
 	 * List of diagrams handled by statistic model and sorted by id.
@@ -21,9 +48,12 @@ public class StatisticModel {
 	 * The current id of the next diagram. Is increased if a new diagram is 
 	 * added to the statistics.
 	 */
-	private int currentIdDiagram = 0;
+	private int currentIdDiagram;
 	
-	
+	/**
+	 * The BufferedImage to which the diagram classes paint their statistics.
+	 */
+	private BufferedImage bi_diagram;
 	
 	/**
 	 * The id which is returned if an error occurs while trying to add a
@@ -32,8 +62,22 @@ public class StatisticModel {
 	public static final int ID_ERROR = -1;
 	
 	
-	public StatisticModel() {
-		sls_diagrams = new SecureListSort<Diagram>();
+	public StatisticModel(final Dimension _d_sizeDiagram,
+			final int _historyLength) {
+		
+		//initialize list of diagrams
+		this.sls_diagrams = new SecureListSort<Diagram>();
+
+		//initialize the current position in array of the contained diagrams
+		//and the amount of saved values with 0.
+		this.nextPositionInArray = 0;
+		this.amountValues = 0;
+		this.historyLength = _historyLength;
+		
+		//initialize the BufferedImage with specified size.
+		this.bi_diagram = new BufferedImage(
+				_d_sizeDiagram.width, _d_sizeDiagram.height, 
+				BufferedImage.TYPE_INT_RGB);
 	}
 	
 	
@@ -54,15 +98,12 @@ public class StatisticModel {
 	 * @param _clr 
 	 * 			the color in which the diagram is printed.
 	 * 
-	 * @param _obs 
-	 * 			the observer (usually a view class) which makes the statistics 
-	 * 			visible for the user.
 	 * @return
 	 * 			the unique identifier of the newly-added in case of success,
 	 * 			otherwise the ID_ERROR.
 	 */
 	public synchronized final int addDiagram(
-			final Color _clr, final Observer _obs) {
+			final Color _clr) {
 		
 		
 		//if the list of the diagrams are not already initialized print error 
@@ -108,8 +149,7 @@ public class StatisticModel {
 		increaseCurrentDiagramID();
 		
 		//initialize diagram and set settings
-		Diagram d_toAdd = new Diagram(_clr);
-		d_toAdd.addObserver(_obs);
+		Diagram d_toAdd = new Diagram(_clr, historyLength);
 		
 		sls_diagrams.insertSorted(
 				d_toAdd, 
@@ -217,29 +257,107 @@ public class StatisticModel {
 		//return the id of the new - created diagram
 		return (found_diagram != null);
 	}
+
 	
+	
+
+	
+	public synchronized boolean addingComplete() {
+
+		//if the list of the diagrams are not already initialized print error 
+		//and re- initialize it for being able to proceed without further error.
+		if (sls_diagrams == null) {
+			
+			//print error
+			Status.getLogger().severe("Fatal error: The list of diagrams in"
+					+ " statistic has been removed. Therefor the diagram"
+					+ " with the specified id is not containded by it."
+					+ " The new point can not be added.");
+			
+			//re - initialize the list of diagrams.
+			this.sls_diagrams = new SecureListSort<Diagram>();
+			
+			//return false because it is impossible that the demanded diagram
+			//can be found in blank list
+			return false;
+		}
+
+
+		setImageSize(new Dimension(bi_diagram.getWidth(),
+				bi_diagram.getHeight()));
+
+		//start a new transaction and closedAction without predecessor because 
+		//the action of painting to BufferedImage is neither handled 
+		//by an external process nor changing the state of the list.
+		final int transactionID = sls_diagrams.startTransaction("notify", 
+				SecureList.ID_NO_PREDECESSOR);
+		final int closedActionID = sls_diagrams.startTransaction("notify", 
+				SecureList.ID_NO_PREDECESSOR);
+
+		//pass the list
+		sls_diagrams.toFirst(transactionID, closedActionID);
+		while (!sls_diagrams.isEmpty() && !sls_diagrams.isBehind()) {
+			
+			if (sls_diagrams.getItem() != null) {
+				
+				
+				//calculate the start position in array.
+				final int startPositionInArray;
+				if (amountValues == historyLength) {
+					startPositionInArray = nextPositionInArray;
+				} else {
+					startPositionInArray = 0;
+				}
+				
+				//paint diagram to the BufferedImage.
+				sls_diagrams.getItem().paintEntirely(
+						startPositionInArray, 
+						amountValues, 
+						bi_diagram);
+			} else {
+				Status.getLogger().warning("Empty diagram");
+			}
+			sls_diagrams.next(transactionID, closedActionID);
+		}
+		
+		
+		//finish the transaction and closedAction because list operations 
+		//are finished
+		sls_diagrams.finishTransaction(transactionID);
+		sls_diagrams.finishClosedAction(closedActionID);
+		
+		
+		
+		
+		increaseAmountValues();
+		increasePositionInField();
+		
+		
+		//set changed
+		setChanged();
+		notifyObservers(bi_diagram);
+		
+		
+		return true;
+	}
 
 
 	/**
-	 * Add observer to of specified diagram. 
+	 * Add new point to specified diagram. 
 	 * 
 	 * Returns whether the operation finished successfully.
 	 * 
 	 * Otherwise an error is logged.
 	 * 
-	 * @param _id_diagramm
-	 * 			the (unique) identifier of the diagram.
+	 * @param _id_diagramm 
+	 * 				the identifier of the specified diagram.
 	 * 
-	 * @param _obs
-	 * 			the new observer which is added to the diagram.
-	 * 
-	 * @return 
-	 *			whether the operation has been performed successfully.
+	 * @param _newValue 
+	 * 				the new value added to the specified diagram.
 	 */
-	public boolean addObserver(
+	public synchronized boolean addValue(
 			final int _id_diagramm, 
-			final Observer _obs){
-
+			final int _newValue){
 		
 		//if the list of the diagrams are not already initialized print error 
 		//and re- initialize it for being able to proceed without further error.
@@ -249,7 +367,7 @@ public class StatisticModel {
 			Status.getLogger().severe("Fatal error: The list of diagrams in"
 					+ " statistic has been removed. Therefor the diagram"
 					+ " with the specified id is not containded by it."
-					+ " The observaer can not be added.");
+					+ " The new point can not be added.");
 			
 			//re - initialize the list of diagrams.
 			this.sls_diagrams = new SecureListSort<Diagram>();
@@ -269,7 +387,7 @@ public class StatisticModel {
 			Status.getLogger().severe("Fatal error: The passed id for changing "
 					+ "diagram is an error id. Something has gone wrong with"
 					+ "the creation of the diagram that is to be altered now."
-					+ " The observaer can not be added.");
+					+ " The new point can not be added.");
 		
 			//return error id because no diagram has been created.
 			return false;
@@ -280,9 +398,9 @@ public class StatisticModel {
 		//start a new transaction and closedAction without predecessor because 
 		//the action of changing the color of a diagram is neither handled 
 		//by an external process nor changing the state of the list.
-		final int transactionID = sls_diagrams.startTransaction("add observer", 
+		final int transactionID = sls_diagrams.startTransaction("add point", 
 				SecureList.ID_NO_PREDECESSOR);
-		final int closedActionID = sls_diagrams.startTransaction("add observer", 
+		final int closedActionID = sls_diagrams.startTransaction("add point", 
 				SecureList.ID_NO_PREDECESSOR);
 		
 		//fetch the demanded diagram out of sortedList
@@ -292,7 +410,7 @@ public class StatisticModel {
 		
 		//perform action
 		if (found_diagram != null) {
-			found_diagram.addObserver(_obs);
+			found_diagram.addValue(nextPositionInArray, _newValue);
 		}
 		
 		//finish the transaction and closedAction because list operations 
@@ -305,102 +423,16 @@ public class StatisticModel {
 	}
 
 
-	/**
-	 * Remove observer from of specified diagram. 
-	 * 
-	 * Returns whether the operation finished successfully.
-	 * 
-	 * Otherwise an error is logged.
-	 * 
-	 * @param _id_diagramm
-	 * 			the (unique) identifier of the diagram.
-	 * 
-	 * @param _obs
-	 * 			the observer which is removed from the diagram.
-	 * 
-	 * @return 
-	 *			whether the operation has been performed successfully.
-	 */
-	public boolean deleteeObserver(
-			final int _id_diagramm, 
-			final Observer _obs){
+	
 
-		
-		//if the list of the diagrams are not already initialized print error 
-		//and re- initialize it for being able to proceed without further error.
-		if (sls_diagrams == null) {
-			
-			//print error
-			Status.getLogger().severe("Fatal error: The list of diagrams in"
-					+ " statistic has been removed. Therefor the diagram"
-					+ " with the specified id is not containded by it."
-					+ " The observaer can not be added.");
-			
-			//re - initialize the list of diagrams.
-			this.sls_diagrams = new SecureListSort<Diagram>();
-			
-			//return false because it is impossible that the demanded diagram
-			//can be found in blank list
-			return false;
-		}
+	public synchronized void setImageSize(final Dimension _d_sizeDiagram) {
 
-		
-		//if the given id is the error id, something has gone wrong with adding
-		//the diagram and the error has not been caught by the external
-		//use of the statistics classes.
-		if (_id_diagramm == ID_ERROR) {
-
-			//print error
-			Status.getLogger().severe("Fatal error: The passed id for changing "
-					+ "diagram is an error id. Something has gone wrong with"
-					+ "the creation of the diagram that is to be altered now."
-					+ " The observaer can not be added.");
-		
-			//return error id because no diagram has been created.
-			return false;
-		}
-		
-		
-		
-		//start a new transaction and closedAction without predecessor because 
-		//the action of changing the color of a diagram is neither handled 
-		//by an external process nor changing the state of the list.
-		final int transactionID = sls_diagrams.startTransaction("add observer", 
-				SecureList.ID_NO_PREDECESSOR);
-		final int closedActionID = sls_diagrams.startTransaction("add observer", 
-				SecureList.ID_NO_PREDECESSOR);
-		
-		//fetch the demanded diagram out of sortedList
-		Diagram found_diagram = sls_diagrams.searchSorted(
-				_id_diagramm, transactionID, closedActionID);
-		
-		
-		//perform action
-		if (found_diagram != null) {
-			found_diagram.deleteObserver(_obs);
-		}
-		
-		//finish the transaction and closedAction because list operations 
-		//are finished
-		sls_diagrams.finishTransaction(transactionID);
-		sls_diagrams.finishClosedAction(closedActionID);
-		
-		//return the id of the new - created diagram
-		return (found_diagram != null);
+		//initialize the BufferedImage with specified size.
+		this.bi_diagram = new BufferedImage(
+				_d_sizeDiagram.width, _d_sizeDiagram.height, 
+				BufferedImage.TYPE_INT_RGB);
 	}
 	
-
-	public synchronized void setImageSize(final Dimension _d) {
-		imageWidth = _d.width;
-		imageHeight = _d.height;
-	}
-	
-	
-
-	
-	private int nextPositionInArray = 0;
-	private int amountValues = 0;
-
 	/**
 	 * Increase the amount of values that are currently saved inside the 
 	 * values array.
@@ -424,6 +456,4 @@ public class StatisticModel {
 	private synchronized void increasePositionInField() {
 		nextPositionInArray = (nextPositionInArray + 1) % historyLength;
 	}
-	
-
 }
