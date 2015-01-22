@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.Random;
 
 import model.Statistic;
+import model.life.creature.Monkey;
 import model.life.creature.Sheep;
 import model.life.creature.Wolf;
 import model.map.Scope;
@@ -226,13 +227,40 @@ public abstract class Creature extends Life {
 					move(_dX, _dY);
 				}
 				
+			} else if (this instanceof Monkey) {
+
+
+				if (wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
+								.containsMonkey()){
+
+					if ( this.isFeminin() != wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
+							.getContainedMonkey().isFeminin()) {
+						
+						if (this.isFeminin()) {
+							setPregnant(true);
+						} else {
+							wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
+									.getContainedMonkey().setPregnant(true);
+						}
+					}							
+						
+				} else if(wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
+						.containsTree()) {
+
+					cTimeWithoutFood = 0;
+					wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
+							.removeTree();
+					move(_dX, _dY);
+				}else if(wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
+						.containsBerries()) {
+
+					cTimeWithoutFood = 0;
+					wi_newScope[pnt_positionInScope.x][pnt_positionInScope.y]
+							.removeBerries();
+					move(_dX, _dY);
+				}
 				
-				
-				
-				
-				
-				
-				
+			
 			}
 			
 			

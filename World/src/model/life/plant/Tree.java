@@ -17,7 +17,7 @@ public class Tree extends Plant {
 				//emission scope
 				new Point(6, 6),
 				new Point (_positionLine, _positionCol),
-				0.1);
+				0.1, 10 );
 
 		if (!( _positionCol == -1 && _positionLine == -1)) {
 			Statistic.increaseAmountTrees();

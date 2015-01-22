@@ -17,7 +17,7 @@ public class Grass extends Plant {
 				//emission scope
 				new Point(9, 9),
 				new Point (_positionLine, _positionCol),
-				0.3);
+				0.3, 1);
 		
 		if (!( _positionCol == -1 && _positionLine == -1)) {
 			Statistic.increaseAmountGrass();

@@ -1,6 +1,8 @@
 package model.map;
 
+import java.awt.Color;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
@@ -167,17 +169,17 @@ public class World extends Observable {
 
 	public void initialize() {
 
-		final int percentageWolfs = 5, percentageSheep = 5, percentageMonkey = 5,
-				percentageBerries = 5, percentageTrees = 5, percentageGrass = 50;
+		final double percentageWolfs = 0.1, percentageSheep = 9, percentageMonkey = 5,
+				percentageBerries = 5, percentageTrees = 5, percentageGrass = 30;
 //				percentageEinzeller = 5;
 	
 		final int 
-		amountWolfs = percentageWolfs * wi_world.length * wi_world[0].length / 100,
-		amountSheep	= percentageSheep * wi_world.length * wi_world[0].length / 100,
-		amountMonkey = 	percentageMonkey * wi_world.length * wi_world[0].length / 100,
-		amountGrass = percentageGrass * wi_world.length * wi_world[0].length / 100,
-		amountTrees = percentageTrees * wi_world.length * wi_world[0].length / 100,
-		amountBerries = percentageBerries * wi_world.length * wi_world[0].length / 100,
+		amountWolfs = (int) (percentageWolfs * wi_world.length * wi_world[0].length / 100),
+		amountSheep	= (int) (percentageSheep * wi_world.length * wi_world[0].length / 100),
+		amountMonkey = 	(int) (percentageMonkey * wi_world.length * wi_world[0].length / 100),
+		amountGrass = (int) (percentageGrass * wi_world.length * wi_world[0].length / 100),
+		amountTrees = (int) (percentageTrees * wi_world.length * wi_world[0].length / 100),
+		amountBerries = (int) (percentageBerries * wi_world.length * wi_world[0].length / 100),
 //		amountEinzeller = percentageEinzeller * wi_world.length * wi_world[0].length / 100;
 		amountEinzeller = 0;
 
@@ -293,7 +295,7 @@ public class World extends Observable {
 	
 	public void initializeSheep() {
 
-		final int amountSheep = 5;
+		final int amountSheep = 25;
 		
 		for (int currentEntity = 0; 
 				currentEntity < amountSheep; 
@@ -355,9 +357,41 @@ public class World extends Observable {
 		}
 	}
 	
+	
+	public void paintBI() {
+		
+		final int stretchX = 3, stretchY = 3;
+		BufferedImage bi = new BufferedImage(
+				stretchX * wi_world.length, 
+				stretchY * wi_world[0].length,
+				BufferedImage.TYPE_INT_ARGB);
+		for (int i = 0; i < wi_world.length; i++) {
+			for (int j = 0; j < wi_world[i].length; j++) {
+				
+				
+				Color clr = wi_world[i][j].getLifeEmission().getColor();
+				if (clr == Color.black) 
+					clr = new Color(0, 0, 0, 0);
+				for (int dx = 0; dx < stretchX; dx++) {
+					for (int dy = 0; dy < stretchX; dy++) {
+						bi.setRGB(stretchX * i + dx, 
+								j * stretchY + dy,
+								clr.getRGB()
+								);
+						
+					}					
+				}
+//				().getItem().getClrBackground().getRGB());
+			}
+		}
+		
+		setChanged();
+		notifyObservers(bi);
+	}
+	
 	public void initializeGrass() {
 
-		final int amountGrass = 5;
+		final int amountGrass = 25;
 		for (int currentEntity = 0; 
 				currentEntity < amountGrass; 
 				currentEntity++) {
@@ -419,5 +453,66 @@ public class World extends Observable {
 	public WorldItem[][] getWi_world() {
 		return wi_world;
 	}
+
+
+	public void initializeTrees() {
+
+		int amountTrees = 5;
+
+		for (int currentEntity = 0; 
+				currentEntity < amountTrees; 
+				currentEntity++) {
+
+			int line = new Random().nextInt(wi_world.length);
+			int column = new Random().nextInt(wi_world[0].length);
+			if (wi_world[line][column].addLife(new Tree(line, column))){
+			wi_world[line][column].emitLifeSmell();
+			} else {
+				currentEntity --;
+			}
+		}
+			
+
+			if (wi_world != null) {
+
+				for (int line = 0; line < wi_world.length; line++) {
+					for (int column = 0; column < wi_world[line].length; column++) {
+						wi_world[line][column].updateEmission();
+					}
+				}			
+			} else {
+				Status.getLogger().severe("failed initializing");
+			}
+		}
+	
+	public void initializeBerries() {
+
+		int amountBerries = 5;
+
+		for (int currentEntity = 0; 
+				currentEntity < amountBerries; 
+				currentEntity++) {
+
+			int line = new Random().nextInt(wi_world.length);
+			int column = new Random().nextInt(wi_world[0].length);
+			if (wi_world[line][column].addLife(new Berries(line, column))){
+			wi_world[line][column].emitLifeSmell();
+			} else {
+				currentEntity --;
+			}
+		}
+			
+
+			if (wi_world != null) {
+
+				for (int line = 0; line < wi_world.length; line++) {
+					for (int column = 0; column < wi_world[line].length; column++) {
+						wi_world[line][column].updateEmission();
+					}
+				}			
+			} else {
+				Status.getLogger().severe("failed initializing");
+			}
+		}
 
 }

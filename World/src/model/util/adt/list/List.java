@@ -349,7 +349,7 @@ public class List<Type> implements Serializable {
         } else {
         	
         	
-        	new Error("").printStackTrace();
+//        	new Error("").printStackTrace();
         	
         	//print warning message
         	Status.getLogger().warning("remove null item out of list: Perform"

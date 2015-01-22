@@ -25,7 +25,7 @@ public final class Status {
 	/**
 	 * The delay after one step of planch time.
 	 */
-	private int delayForPlanckTime = 70;
+	private int delayForPlanckTime = 5;
 	
 	
 	/**

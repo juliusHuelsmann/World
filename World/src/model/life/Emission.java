@@ -61,20 +61,23 @@ public class Emission {
 				/ divisor) ;
 		
 		if (red > 255) {
+
+			Status.getLogger().severe("rimpl. error failed to add something?"
+					+ red);
 			red = 255;
-		} else {
-			Status.getLogger().severe("impl. error failed to add something?");
 		}
 		if (green > 255) {
+
+			Status.getLogger().severe("gimpl. error failed to add something?"
+					
+					+ green);
 			green = 255;
-		} else {
-			Status.getLogger().severe("impl. error failed to add something?");
-		}
+		} 
 		if (blue > 255) {
-			blue = 255;
-		} else {
-			Status.getLogger().severe("impl. error failed to add something?");
-		}
+			Status.getLogger().severe("bimpl. error failed to add something?"
+					+ blue);
+				blue = 255;
+		} 
 				
 		
 		return new Color(red, green, blue);

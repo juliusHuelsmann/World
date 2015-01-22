@@ -8,7 +8,7 @@ import view.map.VWorld;
 @SuppressWarnings("serial")
 public class View extends JFrame {
 
-	private JButton jbtn_init, jbtn_initGrass, jbtn_initSheep, jbtn_initWolf, jbtn_initMonkey, jbtn_run, jbtn_oneStep;
+	private JButton jbtn_init, jbtn_initGrass, jbtn_initSheep, jbtn_initWolf, jbtn_initTrees, jbtn_initBerries, jbtn_initMonkey, jbtn_run, jbtn_oneStep;
 	private VWorld vWorld;
 	final int width = 500, height = 500, minusMap = 20, buttonWidth = 100, minusMapHeight = 30;
 	
@@ -33,6 +33,12 @@ public class View extends JFrame {
 		jbtn_initMonkey = new JButton("init Monkey");
 		jbtn_initMonkey.addActionListener(actionListener);
 		super.add(jbtn_initMonkey);
+		jbtn_initTrees= new JButton("init trees");
+		jbtn_initTrees.addActionListener(actionListener);
+		super.add(jbtn_initTrees);
+		jbtn_initBerries= new JButton("init berries");
+		jbtn_initBerries.addActionListener(actionListener);
+		super.add(jbtn_initBerries);
 
 		jbtn_run = new JButton("run");
 			jbtn_run.addActionListener(actionListener);
@@ -62,7 +68,9 @@ public class View extends JFrame {
 			jbtn_initMonkey.setBounds(getWidth() - minusMap - buttonWidth, jbtn_initGrass.getY() + jbtn_initGrass.getHeight() + 5, buttonWidth, 20);
 			jbtn_initSheep.setBounds(getWidth() - minusMap - buttonWidth, jbtn_initMonkey.getY() + jbtn_initMonkey.getHeight() + 5, buttonWidth, 20);
 			jbtn_initWolf.setBounds(getWidth() - minusMap - buttonWidth, jbtn_initSheep.getY() + jbtn_initSheep.getHeight() + 5, buttonWidth, 20);
-						
+			jbtn_initBerries.setBounds(getWidth() - minusMap - buttonWidth, jbtn_initWolf.getY() + jbtn_initWolf.getHeight() + 5, buttonWidth, 20);
+			jbtn_initTrees.setBounds(getWidth() - minusMap - buttonWidth, jbtn_initBerries.getY() + jbtn_initBerries.getHeight() + 5, buttonWidth, 20);
+			
 			vWorld.setSize(getWidth() - minusMap - buttonWidth, getHeight() - minusMapHeight);
 		}
 	}
@@ -131,6 +139,34 @@ public class View extends JFrame {
 	 */
 	public JButton getJbtn_oneStep() {
 		return jbtn_oneStep;
+	}
+
+	/**
+	 * @return the jbtn_initTrees
+	 */
+	public JButton getJbtn_initTrees() {
+		return jbtn_initTrees;
+	}
+
+	/**
+	 * @param jbtn_initTrees the jbtn_initTrees to set
+	 */
+	public void setJbtn_initTrees(JButton jbtn_initTrees) {
+		this.jbtn_initTrees = jbtn_initTrees;
+	}
+
+	/**
+	 * @return the jbtn_initBerries
+	 */
+	public JButton getJbtn_initBerries() {
+		return jbtn_initBerries;
+	}
+
+	/**
+	 * @param jbtn_initBerries the jbtn_initBerries to set
+	 */
+	public void setJbtn_initBerries(JButton jbtn_initBerries) {
+		this.jbtn_initBerries = jbtn_initBerries;
 	}
 
 }

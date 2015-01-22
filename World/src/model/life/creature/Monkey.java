@@ -13,10 +13,10 @@ public class Monkey extends Creature{
 	public Monkey(final int _positionLine, final int _positionCol) {
 		super(
 				//visibility scope
-				new Point(4, 4), 
+				new Point(9, 9), 
 				
 				//position in scope of life form
-				new Point(2, 1),
+				new Point(4, 4),
 				
 				//current position
 				new Point(_positionLine, _positionCol),
@@ -25,16 +25,16 @@ public class Monkey extends Creature{
 				3,
 				
 				//max time without food
-				122,
+				32,
 				
 				//max lifetime
 				100, 
 				
 				//min age pregnancy
-				9,
+				6,
 				
 				//time of pregnancy
-				3, 
+				13, 
 				
 				//emission scope
 				new Point(6, 6),

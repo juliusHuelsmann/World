@@ -12,9 +12,14 @@ import model.util.adt.list.List;
 
 public abstract class Plant extends Life {
 
+	private int lp;
 	public Plant(final Point _emissionScope, final Point _position,
-			final double _emissionMult) {
+			final double _emissionMult,
+			final int _lp) {
+		
 		super(_emissionScope, _position, _emissionMult);
+		
+		this.lp = _lp;
 	}
 	List<Creature> ls_creatureEats;
 	List<Creature> ls_creatureDestroys;
@@ -23,20 +28,23 @@ public abstract class Plant extends Life {
 
 	public void die() {
 
-		
-		WorldItem[][]  wi_scope = Scope.getEmissionScope(this);
+		removeLP();
+		if (lp <= 0) {
 
-		if (wi_scope != null 
-				&& wi_scope[wi_scope.length / 2][wi_scope[0].length / 2]
-						.getLife() != null) {
+			WorldItem[][]  wi_scope = Scope.getEmissionScope(this);
 
-			wi_scope[wi_scope.length / 2][wi_scope[0].length / 2]
-					.remvoeLife(this);
+			if (wi_scope != null 
+					&& wi_scope[wi_scope.length / 2][wi_scope[0].length / 2]
+							.getLife() != null) {
 
-			Statistic.removeLife(this);
-		} else {
-//			System.out.println("error");
-			Status.getLogger().severe("not initialized yet");
+				wi_scope[wi_scope.length / 2][wi_scope[0].length / 2]
+						.remvoeLife(this);
+
+				Statistic.removeLife(this);
+			} else {
+//				System.out.println("error");
+				Status.getLogger().severe("not initialized yet");
+			}
 		}
 
 	}
@@ -71,5 +79,19 @@ public abstract class Plant extends Life {
 			
 		
 		
+	}
+
+	/**
+	 * @return the lp
+	 */
+	public int getLp() {
+		return lp;
+	}
+
+	/**
+	 * @param lp the lp to set
+	 */
+	public void removeLP() {
+		this.lp = lp - 1;
 	}
 }

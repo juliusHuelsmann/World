@@ -9,7 +9,9 @@ import model.life.Life;
 import model.life.creature.Monkey;
 import model.life.creature.Sheep;
 import model.life.creature.Wolf;
+import model.life.plant.Berries;
 import model.life.plant.Grass;
+import model.life.plant.Tree;
 import model.util.Status;
 import model.util.adt.list.List;
 
@@ -240,6 +242,36 @@ public class WorldItem extends Observable {
 	
 		
 	}
+	public boolean containsTree() {
+
+		life.toFirst();
+		while(!life.isEmpty() && !life.isBehind()) {
+			if (life.getElement().getContent() instanceof Tree){
+				return true;
+			}
+			
+			life.next();
+		}
+		return false;
+	
+		
+	}
+	public boolean containsBerries() {
+
+		life.toFirst();
+		while(!life.isEmpty() && !life.isBehind()) {
+			if (life.getElement().getContent() instanceof Berries){
+				return true;
+			}
+			
+			life.next();
+		}
+		return false;
+	
+		
+	}
+
+
 	public boolean containsMonkey() {
 
 		life.toFirst();
@@ -289,7 +321,6 @@ public class WorldItem extends Observable {
 			
 			if (life.getElement().getContent() instanceof Creature){
 				life.getElement().getContent().die();
-				life.remove();
 			}
 			life.next();
 		}
@@ -306,6 +337,43 @@ public class WorldItem extends Observable {
 		while(!life.isEmpty() && !life.isBehind()){
 			
 			if (life.getElement().getContent() instanceof Grass){
+
+				life.getElement().getContent().die();
+//				life.remove();
+			}
+			life.next();
+		}
+		
+		
+		setChanged();
+		notifyObservers(Color.LIGHT_GRAY);
+	}
+
+
+	public void removeBerries() {
+
+		life.toFirst();
+		while(!life.isEmpty() && !life.isBehind()){
+			
+			if (life.getElement().getContent() instanceof Berries){
+
+				life.getElement().getContent().die();
+//				life.remove();
+			}
+			life.next();
+		}
+		
+		
+		setChanged();
+		notifyObservers(Color.LIGHT_GRAY);
+	}
+
+	public void removeTree() {
+
+		life.toFirst();
+		while(!life.isEmpty() && !life.isBehind()){
+			
+			if (life.getElement().getContent() instanceof Tree){
 
 				life.getElement().getContent().die();
 //				life.remove();

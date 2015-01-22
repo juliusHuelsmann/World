@@ -10,14 +10,14 @@ import model.life.Plant;
 public class Berries extends Plant {
 
 	final int reproducionTime = 15 + new Random().nextInt(30);
-	final int lifeTime = 30 + new Random().nextInt(10);
+	final int timeOfLife = 30 + new Random().nextInt(10);
 	
 	public Berries(final int _positionLine, final int _positionCol) {
 		super(
 				//emission scope
 				new Point(9, 9),
 				new Point (_positionLine, _positionCol),
-				0.2);
+				0.2, 5);
 
 		if (!( _positionCol == -1 && _positionLine == -1)) {
 			Statistic.increaseAmountBerries();
@@ -50,7 +50,7 @@ public class Berries extends Plant {
 
 				reproduce();
 			}
-		} else if (getLifetime() % lifeTime == 0) {
+		} else if (getLifetime() >= timeOfLife ) {
 			die();
 		}
 	}

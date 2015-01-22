@@ -92,16 +92,13 @@ public class Wolf extends Creature{
 				} else if (p_nurriture != null && p_partner == null) {
 						move(p_nurriture.x, p_nurriture.y);
 						
-					} else if (p_nurriture == null && p_partner != null) {
+				} else if (p_nurriture == null && p_partner != null) {
 
 						move(p_partner.x, p_partner.y);
-					} else {
+				} else {
 						//smelled both wolf and sheep.
 						
-						if (getPercentageAge() > 50) {
-
-							move(p_partner.x, p_partner.y);
-						} else if (getPercentageHunger() > 25) {
+						if (getPercentageHunger() > 25) {
 
 							move(p_nurriture.x, p_nurriture.y);
 						}  else {
