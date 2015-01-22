@@ -31,7 +31,7 @@ public class Monkey extends Creature{
 				100, 
 				
 				//min age pregnancy
-				6,
+				0,
 				
 				//time of pregnancy
 				13, 

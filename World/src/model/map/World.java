@@ -169,8 +169,8 @@ public class World extends Observable {
 
 	public void initialize() {
 
-		final double percentageWolfs = 0.1, percentageSheep = 9, percentageMonkey = 5,
-				percentageBerries = 5, percentageTrees = 5, percentageGrass = 30;
+		final double percentageWolfs = 0.1, percentageSheep = 5, percentageMonkey = 5,
+				percentageBerries = 15, percentageTrees = 25, percentageGrass = 55;
 //				percentageEinzeller = 5;
 	
 		final int 
@@ -416,7 +416,7 @@ public class World extends Observable {
 		
 	}
 	
-	public void initializeMonkey() {
+	public void initializeMonkeyOld() {
 
 		int amountMonkey = 5;
 
@@ -430,6 +430,37 @@ public class World extends Observable {
 			wi_world[line][column].emitLifeSmell();
 			} else {
 				currentEntity --;
+			}
+		}
+			
+
+			if (wi_world != null) {
+
+				for (int line = 0; line < wi_world.length; line++) {
+					for (int column = 0; column < wi_world[line].length; column++) {
+						wi_world[line][column].updateEmission();
+					}
+				}			
+			} else {
+				Status.getLogger().severe("failed initializing");
+			}
+		}
+	
+	public void initializeMonkey() {
+
+		int amountMonkey = 15;
+
+		int randline = new Random().nextInt(wi_world.length);
+		int randcolumn = new Random().nextInt(wi_world[0].length);
+		for (int currentEntity = 0; 
+				currentEntity < amountMonkey; 
+				currentEntity++) {
+
+			if (wi_world[randline + currentEntity][randcolumn].addLife(new Monkey(randline, randcolumn))){
+				wi_world[randline][randcolumn].emitLifeSmell();
+			} else {
+				currentEntity --;
+				randcolumn ++;
 			}
 		}
 			

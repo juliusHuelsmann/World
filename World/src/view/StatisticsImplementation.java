@@ -24,6 +24,7 @@ public class StatisticsImplementation extends JFrame {
 	
 	private final StatisticControl sc = new StatisticControl(d);
 	
+	private JLabel jlbl_anzahl;
 	public StatisticControl getSC() {
 		return sc;
 	}
@@ -40,7 +41,6 @@ public class StatisticsImplementation extends JFrame {
 		
 		super.add(sc.getVW_Statistic());
 		sc.getVW_Statistic().setLocation((int) (super.getWidth() - d.getWidth()) / 2, 30);
-		
 		
 		super.setVisible(true);
 		super.setResizable(false);
@@ -101,6 +101,11 @@ public class StatisticsImplementation extends JFrame {
 		super.add(jlbl_title);
 //		Util.getStrokeHeadline(jlbl_title);
 
+		jlbl_anzahl = new JLabel();
+		jlbl_anzahl.setBounds(5, 200, 200, 25);
+		jlbl_anzahl.setText("Anzahl");
+		super.add(jlbl_anzahl);
+		
 		
 		JLabel jlbl_background = new JLabel();
 		jlbl_background.setFocusable(false);
@@ -119,6 +124,18 @@ public class StatisticsImplementation extends JFrame {
 		
 		
 	
+	}
+	/**
+	 * @return the jlbl_anzahl
+	 */
+	public JLabel getJlbl_anzahl() {
+		return jlbl_anzahl;
+	}
+	/**
+	 * @param jlbl_anzahl the jlbl_anzahl to set
+	 */
+	public void setJlbl_anzahl(JLabel jlbl_anzahl) {
+		this.jlbl_anzahl = jlbl_anzahl;
 	}
 
 }

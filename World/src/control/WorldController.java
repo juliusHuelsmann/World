@@ -60,6 +60,9 @@ public class WorldController implements Runnable, ActionListener {
 			si.getSC().addData(id_stats_wolf, Statistic.getAmountTrees()  / 150);
 			si.getSC().addingComplete();
 			world.paintBI();
+			world.increaseCurrentStep();
+			
+			si.getJlbl_anzahl().setText("Anzahl:" + world.getCurrentStep());
 			
 			try {
 
